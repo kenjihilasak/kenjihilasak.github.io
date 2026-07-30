@@ -14,7 +14,7 @@ problem, contribution, evaluation, outcome and remaining trade-offs.
 - TypeScript for content data
 - Self-hosted Source Serif 4 and IBM Plex Sans
 - GitHub Actions for validation and GitHub Pages deployment
-- Lighthouse CI for performance and accessibility budgets
+- Lighthouse for automated performance and accessibility budgets
 
 No client-side framework or analytics script is shipped.
 
