@@ -1,0 +1,575 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ArrowIcon from "../components/ArrowIcon.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import { capabilities, experience, projects, site } from "../data/site";
+
+const featuredProjects = projects.filter((project) => project.featured);
+---
+
+<BaseLayout>
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="hero__intro">
+        <p class="eyebrow">Data & AI Engineer · Leeds, UK</p>
+        <h1>
+          I build data systems that move from <em>research</em> to production.
+        </h1>
+      </div>
+      <div class="hero__aside">
+        <p class="lede">
+          Reliable data pipelines, production-focused machine learning and
+          multilingual NLP—built to solve real problems.
+        </p>
+        <div class="hero__actions">
+          <a class="button" href="#selected-work">
+            Explore selected work
+            <ArrowIcon direction="down" />
+          </a>
+          <a class="button button--secondary" href={site.cv}>
+            Download CV
+            <ArrowIcon direction="up-right" />
+          </a>
+        </div>
+      </div>
+      <div class="hero__status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <p>
+          Research Assistant at the University of Leeds. Open to Data
+          Engineering, ML Engineering and applied AI opportunities.
+        </p>
+      </div>
+      <div class="hero__signal" aria-hidden="true">
+        <svg viewBox="0 0 600 180">
+          <path d="M0 90h82l38-44 48 89 50-89 47 89 38-45h297"></path>
+          <circle cx="120" cy="46" r="5"></circle>
+          <circle cx="168" cy="135" r="5"></circle>
+          <circle cx="218" cy="46" r="5"></circle>
+          <circle cx="265" cy="135" r="5"></circle>
+          <circle cx="303" cy="90" r="5"></circle>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="proof" aria-label="Professional highlights">
+    <div class="container proof__grid">
+      <div>
+        <strong>6+</strong>
+        <span>years across data, software and research</span>
+      </div>
+      <div>
+        <strong>48 → 6h</strong>
+        <span>core NLP workflow runtime</span>
+      </div>
+      <div>
+        <strong>5</strong>
+        <span>languages in a simplification corpus</span>
+      </div>
+      <div>
+        <strong>Distinction</strong>
+        <span>MSc Data Science & Analytics</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white" id="selected-work">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Selected work"
+        title="Evidence, not just a list of tools."
+        intro="Each project starts with a concrete problem, makes the technical decisions visible and links to the underlying work."
+      />
+      <div class="project-grid">
+        {
+          featuredProjects.map((project, index) => (
+            <ProjectCard project={project} index={index} />
+          ))
+        }
+      </div>
+      <a class="text-link" href="/work/">
+        View all projects
+        <ArrowIcon />
+      </a>
+    </div>
+  </section>
+
+  <section class="section expertise">
+    <div class="container">
+      <SectionHeading
+        eyebrow="How I work"
+        title="From raw data to reliable decisions."
+        intro="I combine engineering discipline, statistical thinking and clear communication across the full lifecycle."
+      />
+      <div class="capability-list">
+        {
+          capabilities.map((capability) => (
+            <article>
+              <span>{capability.number}</span>
+              <h3>{capability.title}</h3>
+              <p>{capability.text}</p>
+              <small>{capability.tools}</small>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--teal experience-preview">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Experience"
+        title="Engineering shaped by different environments."
+        intro="Academic research, financial services, consulting and entrepreneurship—connected by a focus on useful, dependable systems."
+      />
+      <div class="experience-preview__grid">
+        {
+          experience.slice(0, 3).map((item) => (
+            <article>
+              <p class="experience-preview__period">{item.period}</p>
+              <h3>{item.role}</h3>
+              <p class="experience-preview__org">{item.organisation}</p>
+              <p>{item.summary}</p>
+            </article>
+          ))
+        }
+      </div>
+      <a class="text-link text-link--light" href="/experience/">
+        Full experience
+        <ArrowIcon />
+      </a>
+    </div>
+  </section>
+
+  <section class="section research-feature">
+    <div class="container research-feature__grid">
+      <div>
+        <p class="eyebrow">Featured research · 2026</p>
+        <h2>Align and Shine</h2>
+      </div>
+      <div class="research-feature__copy">
+        <p class="lede">
+          Building high-quality sentence-aligned corpora for multilingual text
+          simplification.
+        </p>
+        <p>
+          Co-authored with Nouran Khallaf and Serge Sharoff and presented at the
+          BUCC workshop at LREC 2026. The work releases aligned data across five
+          languages to support more accessible language technologies.
+        </p>
+        <div class="link-row">
+          <a href="https://arxiv.org/abs/2605.09476">
+            Read the paper
+            <ArrowIcon direction="up-right" />
+          </a>
+          <a href="https://github.com/kenjihilasak/Align-and-Shine">
+            Explore the code
+            <ArrowIcon direction="up-right" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white about-preview">
+    <div class="container about-preview__grid">
+      <div class="about-preview__label">
+        <p class="eyebrow">Beyond the code</p>
+        <span aria-hidden="true">PE → BR → UK</span>
+      </div>
+      <div>
+        <h2>A path through engineering, entrepreneurship and research.</h2>
+        <p class="lede">
+          My route into data began with mechatronics in Peru, continued through
+          robotics and a technology company, and now centres on data and AI
+          systems in Leeds.
+        </p>
+        <a class="text-link" href="/about/">
+          Read my story
+          <ArrowIcon />
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: clamp(5rem, 10vw, 9rem) var(--space-7);
+    overflow: hidden;
+  }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.6fr);
+    gap: var(--space-6);
+    align-items: end;
+  }
+
+  .hero__intro {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero .eyebrow {
+    margin-bottom: var(--space-5);
+  }
+
+  .hero h1 {
+    max-width: 11.5ch;
+  }
+
+  .hero h1 em {
+    color: var(--teal);
+    font-weight: inherit;
+  }
+
+  .hero__aside {
+    padding-bottom: 0.4rem;
+  }
+
+  .hero__aside .lede {
+    color: var(--ink);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+
+  .hero__status {
+    display: flex;
+    max-width: 35rem;
+    gap: var(--space-3);
+    align-items: flex-start;
+    font-size: var(--step--1);
+  }
+
+  .hero__status p {
+    margin: 0;
+  }
+
+  .status-dot {
+    width: 0.7rem;
+    height: 0.7rem;
+    flex: 0 0 auto;
+    margin-top: 0.38rem;
+    border-radius: 50%;
+    background: var(--brick);
+    box-shadow: 0 0 0 0.3rem rgb(182 65 58 / 14%);
+  }
+
+  .hero__signal {
+    align-self: center;
+    color: var(--teal);
+  }
+
+  .hero__signal svg {
+    width: 100%;
+    overflow: visible;
+  }
+
+  .hero__signal path,
+  .hero__signal circle {
+    fill: var(--paper);
+    stroke: currentColor;
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .hero__signal path {
+    fill: none;
+    opacity: 0.5;
+  }
+
+  .proof {
+    border-block: 1px solid var(--line);
+    background: var(--paper-deep);
+  }
+
+  .proof__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .proof__grid div {
+    display: flex;
+    min-height: 9.5rem;
+    padding: var(--space-4);
+    flex-direction: column;
+    justify-content: center;
+    border-left: 1px solid var(--line);
+  }
+
+  .proof__grid div:last-child {
+    border-right: 1px solid var(--line);
+  }
+
+  .proof strong {
+    color: var(--teal);
+    font-family: var(--font-serif);
+    font-size: var(--step-3);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+
+  .proof span {
+    max-width: 13rem;
+    margin-top: 0.35rem;
+    color: var(--muted);
+    font-size: var(--step--1);
+    line-height: 1.4;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .project-grid :global(.project-card:not(:last-child)) {
+    border-right: 0;
+  }
+
+  .text-link {
+    display: inline-flex;
+    gap: 0.45rem;
+    align-items: center;
+    margin-top: var(--space-6);
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .text-link:hover {
+    color: var(--brick);
+  }
+
+  .capability-list {
+    border-top: 1px solid var(--line);
+  }
+
+  .capability-list article {
+    display: grid;
+    grid-template-columns: 0.18fr 0.5fr 1fr 0.7fr;
+    padding-block: var(--space-5);
+    border-bottom: 1px solid var(--line);
+    gap: var(--space-5);
+    align-items: baseline;
+  }
+
+  .capability-list article > span {
+    color: var(--brick);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+
+  .capability-list h3 {
+    font-size: var(--step-2);
+  }
+
+  .capability-list p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .capability-list small {
+    color: var(--teal);
+    font-size: var(--step--1);
+  }
+
+  .experience-preview__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid rgb(248 243 234 / 24%);
+  }
+
+  .experience-preview__grid article {
+    padding: var(--space-5);
+    border-right: 1px solid rgb(248 243 234 / 24%);
+  }
+
+  .experience-preview__grid article:first-child {
+    padding-left: 0;
+  }
+
+  .experience-preview__grid article:last-child {
+    padding-right: 0;
+    border-right: 0;
+  }
+
+  .experience-preview__period,
+  .experience-preview__org {
+    color: var(--mint);
+    font-size: var(--step--1);
+  }
+
+  .experience-preview h3 {
+    min-height: 5.5rem;
+    margin-bottom: var(--space-3);
+    font-size: var(--step-2);
+  }
+
+  .experience-preview__grid article > p:last-child {
+    color: rgb(248 243 234 / 74%);
+  }
+
+  .text-link--light {
+    color: var(--paper);
+  }
+
+  .text-link--light:hover {
+    color: var(--mint);
+  }
+
+  .research-feature__grid {
+    display: grid;
+    grid-template-columns: 0.75fr 1.25fr;
+    gap: var(--space-8);
+    align-items: start;
+  }
+
+  .research-feature h2 {
+    margin-top: var(--space-4);
+    color: var(--teal);
+  }
+
+  .research-feature__copy {
+    max-width: 46rem;
+    padding-top: var(--space-6);
+  }
+
+  .research-feature__copy > p:not(.lede) {
+    color: var(--muted);
+  }
+
+  .link-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+    margin-top: var(--space-5);
+  }
+
+  .link-row a {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .about-preview__grid {
+    display: grid;
+    grid-template-columns: 0.38fr 1fr;
+    gap: var(--space-8);
+  }
+
+  .about-preview__label span {
+    display: block;
+    margin-top: var(--space-5);
+    color: var(--brick);
+    font-size: var(--step-1);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  .about-preview h2 {
+    max-width: 16ch;
+    font-size: var(--step-4);
+  }
+
+  .about-preview .lede {
+    margin-top: var(--space-5);
+  }
+
+  @media (max-width: 64rem) {
+    .hero__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero__aside {
+      max-width: 42rem;
+    }
+
+    .hero__signal {
+      display: none;
+    }
+
+    .proof__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .proof__grid div:nth-child(2) {
+      border-right: 1px solid var(--line);
+    }
+
+    .proof__grid div:nth-child(-n + 2) {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .project-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+    }
+
+    .project-grid :global(.project-card:not(:last-child)) {
+      border-right: 1px solid var(--line);
+    }
+
+    .capability-list article {
+      grid-template-columns: 0.15fr 0.55fr 1.3fr;
+    }
+
+    .capability-list small {
+      grid-column: 2 / -1;
+    }
+
+    .experience-preview__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .experience-preview__grid article,
+    .experience-preview__grid article:first-child,
+    .experience-preview__grid article:last-child {
+      padding: var(--space-5) 0;
+      border-right: 0;
+      border-bottom: 1px solid rgb(248 243 234 / 24%);
+    }
+
+    .experience-preview h3 {
+      min-height: auto;
+    }
+
+    .research-feature__grid,
+    .about-preview__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+    }
+  }
+
+  @media (max-width: 42rem) {
+    .proof__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .proof__grid div,
+    .proof__grid div:nth-child(2),
+    .proof__grid div:last-child {
+      min-height: 8rem;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .capability-list article {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+
+    .capability-list small {
+      grid-column: auto;
+    }
+  }
+</style>

@@ -1,0 +1,336 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ArrowIcon from "../components/ArrowIcon.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import { capabilities, experience, site } from "../data/site";
+---
+
+<BaseLayout
+  title="Experience — Kenji Hilasaca"
+  description="Kenji Hilasaca's experience across data engineering, applied machine learning, NLP research and software delivery."
+>
+  <header class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Experience</p>
+      <h1>Systems built in the real world.</h1>
+      <p class="lede">
+        Six years across research, financial services, consulting and
+        entrepreneurship—working from data foundations through to usable
+        products.
+      </p>
+    </div>
+  </header>
+
+  <section class="section section--white">
+    <div class="container timeline">
+      {
+        experience.map((item, index) => (
+          <article class="timeline__item">
+            <div class="timeline__meta">
+              <span>0{index + 1}</span>
+              <p>{item.period}</p>
+            </div>
+            <div class="timeline__title">
+              <h2>{item.role}</h2>
+              <p>{item.organisation}</p>
+            </div>
+            <div class="timeline__copy">
+              <p>{item.summary}</p>
+              <ul class="tag-list" aria-label="Skills">
+                {item.tags.map((tag) => (
+                  <li>{tag}</li>
+                ))}
+              </ul>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section impact">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Selected impact"
+        title="Measured improvements, with context."
+        intro="Public figures are limited to claims that can be explained clearly in an interview."
+      />
+      <div class="impact__grid">
+        <article>
+          <strong>48 → 6 hours</strong>
+          <p>
+            Reduced the runtime of a core NLP extraction workflow on shared
+            research compute.
+          </p>
+        </article>
+        <article>
+          <strong>50%</strong>
+          <p>
+            Reduced processing latency while building distributed data workflows
+            in corporate banking.
+          </p>
+        </article>
+        <article>
+          <strong>5 languages</strong>
+          <p>
+            Contributed data infrastructure for an open multilingual
+            text-simplification corpus.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--teal">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Capabilities"
+        title="A connected engineering toolkit."
+        intro="Technologies matter when they support a sound decision, a dependable workflow or a maintainable product."
+      />
+      <div class="capabilities">
+        {
+          capabilities.map((capability) => (
+            <article>
+              <span>{capability.number}</span>
+              <h3>{capability.title}</h3>
+              <p>{capability.text}</p>
+              <small>{capability.tools}</small>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section education">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Education"
+        title="Foundations and progression."
+      />
+      <div class="education__list">
+        <article>
+          <p>2024 — 2025 · United Kingdom</p>
+          <h3>MSc Data Science & Analytics · Distinction</h3>
+          <span>University of Leeds</span>
+        </article>
+        <article>
+          <p>2022 — 2023 · Remote</p>
+          <h3>MicroMasters programme · Statistics and Data Science</h3>
+          <span>MITx</span>
+        </article>
+        <article>
+          <p>2010 — 2016 · Peru</p>
+          <h3>BSc Mechatronic Engineering</h3>
+          <span>National University of Engineering</span>
+        </article>
+      </div>
+      <a class="button button--secondary" href={site.cv}>
+        Download full CV
+        <ArrowIcon direction="up-right" />
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .timeline__item {
+    display: grid;
+    grid-template-columns: 0.35fr 0.85fr 1fr;
+    padding-block: var(--space-6);
+    border-top: 1px solid var(--line);
+    gap: var(--space-6);
+  }
+
+  .timeline__item:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .timeline__meta {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .timeline__meta > span {
+    color: var(--brick);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+
+  .timeline__meta p,
+  .timeline__title p {
+    margin: 0;
+    color: var(--teal);
+    font-size: var(--step--1);
+    font-weight: 500;
+  }
+
+  .timeline__title h2 {
+    margin-bottom: var(--space-3);
+    font-size: var(--step-3);
+  }
+
+  .timeline__copy > p {
+    color: var(--muted);
+  }
+
+  .timeline__copy .tag-list {
+    margin-top: var(--space-4);
+  }
+
+  .impact__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-block: 1px solid var(--line);
+  }
+
+  .impact article {
+    min-height: 17rem;
+    padding: var(--space-5);
+    border-right: 1px solid var(--line);
+  }
+
+  .impact article:first-child {
+    padding-left: 0;
+  }
+
+  .impact article:last-child {
+    padding-right: 0;
+    border-right: 0;
+  }
+
+  .impact strong {
+    display: block;
+    margin-bottom: var(--space-6);
+    color: var(--teal);
+    font-family: var(--font-serif);
+    font-size: var(--step-4);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  .impact p {
+    max-width: 18rem;
+    color: var(--muted);
+  }
+
+  .capabilities {
+    border-top: 1px solid rgb(248 243 234 / 24%);
+  }
+
+  .capabilities article {
+    display: grid;
+    grid-template-columns: 0.18fr 0.5fr 1fr 0.7fr;
+    padding-block: var(--space-5);
+    border-bottom: 1px solid rgb(248 243 234 / 24%);
+    gap: var(--space-5);
+    align-items: baseline;
+  }
+
+  .capabilities article > span {
+    color: var(--mint);
+    font-size: var(--step--1);
+  }
+
+  .capabilities h3 {
+    font-size: var(--step-2);
+  }
+
+  .capabilities p {
+    margin: 0;
+    color: rgb(248 243 234 / 72%);
+  }
+
+  .capabilities small {
+    color: var(--mint);
+    font-size: var(--step--1);
+  }
+
+  .education__list {
+    margin-bottom: var(--space-6);
+    border-top: 1px solid var(--line);
+  }
+
+  .education__list article {
+    display: grid;
+    grid-template-columns: 0.45fr 1fr 0.55fr;
+    padding-block: var(--space-5);
+    border-bottom: 1px solid var(--line);
+    gap: var(--space-5);
+    align-items: baseline;
+  }
+
+  .education__list p,
+  .education__list span {
+    margin: 0;
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  .education__list h3 {
+    font-size: var(--step-2);
+  }
+
+  @media (max-width: 62rem) {
+    .timeline__item {
+      grid-template-columns: 0.3fr 1fr;
+    }
+
+    .timeline__copy {
+      grid-column: 2;
+    }
+
+    .capabilities article {
+      grid-template-columns: 0.18fr 0.7fr 1fr;
+    }
+
+    .capabilities small {
+      grid-column: 2 / -1;
+    }
+
+    .education__list article {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+  }
+
+  @media (max-width: 42rem) {
+    .timeline__item {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+    }
+
+    .timeline__meta {
+      flex-direction: row;
+    }
+
+    .timeline__copy {
+      grid-column: auto;
+    }
+
+    .impact__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .impact article,
+    .impact article:first-child,
+    .impact article:last-child {
+      min-height: auto;
+      padding: var(--space-5) 0;
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .capabilities article {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+
+    .capabilities small {
+      grid-column: auto;
+    }
+  }
+</style>

@@ -1,71 +1,73 @@
-# [Start Bootstrap - Clean Blog](https://startbootstrap.com/template-overviews/clean-blog/)
+# Kenji Hilasaca — portfolio
 
-[Clean Blog](http://startbootstrap.com/template-overviews/clean-blog/) is a stylish, responsive blog theme for [Bootstrap](http://getbootstrap.com/) created by [Start Bootstrap](http://startbootstrap.com/). This theme features a blog homepage, about page, contact page, and an example post page along with a working PHP contact form.
+Source for [kenjihilasak.github.io](https://kenjihilasak.github.io), the
+professional portfolio of Kenji Hilasaca, a Data & AI Engineer based in Leeds,
+UK.
 
-## Preview
+The site presents selected work in data engineering, applied machine learning
+and multilingual NLP. It is intentionally evidence-led: projects explain the
+problem, contribution, evaluation, outcome and remaining trade-offs.
 
-[![Clean Blog Preview](https://startbootstrap.com/assets/img/templates/clean-blog.jpg)](https://blackrockdigital.github.io/startbootstrap-clean-blog/)
+## Stack
 
-**[View Live Preview](https://blackrockdigital.github.io/startbootstrap-clean-blog/)**
+- [Astro](https://astro.build/) for static rendering
+- TypeScript for content data
+- Self-hosted Source Serif 4 and IBM Plex Sans
+- GitHub Actions for validation and GitHub Pages deployment
+- Lighthouse for automated performance and accessibility budgets
 
-## Status
+No client-side framework or analytics script is shipped.
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/BlackrockDigital/startbootstrap-clean-blog/master/LICENSE)
-[![npm version](https://img.shields.io/npm/v/startbootstrap-clean-blog.svg)](https://www.npmjs.com/package/startbootstrap-clean-blog)
-[![Build Status](https://travis-ci.org/BlackrockDigital/startbootstrap-clean-blog.svg?branch=master)](https://travis-ci.org/BlackrockDigital/startbootstrap-clean-blog)
-[![dependencies Status](https://david-dm.org/BlackrockDigital/startbootstrap-clean-blog/status.svg)](https://david-dm.org/BlackrockDigital/startbootstrap-clean-blog)
-[![devDependencies Status](https://david-dm.org/BlackrockDigital/startbootstrap-clean-blog/dev-status.svg)](https://david-dm.org/BlackrockDigital/startbootstrap-clean-blog?type=dev)
+## Local development
 
-## Download and Installation
+Requires Node.js 22 or later.
 
-To begin using this template, choose one of the following options to get started:
-* [Download the latest release on Start Bootstrap](https://startbootstrap.com/template-overviews/clean-blog/)
-* Install via npm: `npm i startbootstrap-clean-blog`
-* Clone the repo: `git clone https://github.com/BlackrockDigital/startbootstrap-clean-blog.git`
-* [Fork, Clone, or Download on GitHub](https://github.com/BlackrockDigital/startbootstrap-clean-blog)
+```bash
+npm install
+npm run dev
+```
 
-## Usage
+The development server is available at `http://localhost:4321`.
 
-### Basic Usage
+## Quality checks
 
-After downloading, simply edit the HTML and CSS files included with the template in your favorite text editor to make changes. These are the only files you need to worry about, you can ignore everything else! To preview the changes you make to the code, you can open the `index.html` file in your web browser.
+```bash
+npm run format:check
+npm run build
+npm run check:links
+npm run audit
+```
 
-### Advanced Usage
+`npm run build` performs Astro's type/content checks before producing the static
+site in `dist/`.
 
-After installation, run `npm install` and then run `gulp dev` which will open up a preview of the template in your default browser, watch for changes to core template files, and live reload the browser when changes are saved. You can view the `gulpfile.js` to see which tasks are included with the dev environment.
+## Project structure
 
-#### Gulp Tasks
+```text
+src/
+├── assets/       # Optimised by Astro at build time
+├── components/   # Reusable UI
+├── data/         # Typed portfolio and case-study content
+├── layouts/      # Metadata, navigation and footer
+├── pages/        # Static routes and case studies
+└── styles/       # Global design tokens and foundations
+```
 
-- `gulp` the default task that builds everything
-- `gulp dev` browserSync opens the project in your default browser and live reloads when changes are made
-- `gulp sass` compiles SCSS files into CSS
-- `gulp minify-css` minifies the compiled CSS file
-- `gulp minify-js` minifies the themes JS file
-- `gulp copy` copies dependencies from node_modules to the vendor directory
+## Deployment
 
-## Bugs and Issues
+Pull requests run formatting, type, build, link and Lighthouse checks. Merges to
+`master` deploy the generated static site to GitHub Pages through the official
+GitHub Pages actions.
 
-Have a bug or an issue with this template? [Open a new issue](https://github.com/BlackrockDigital/startbootstrap-clean-blog/issues) here on GitHub or leave a comment on the [template overview page at Start Bootstrap](http://startbootstrap.com/template-overviews/clean-blog/).
+## Design
 
-## Custom Builds
+The visual system uses an original academic-editorial direction: warm paper
+tones, deep teal, restrained typography and visible information hierarchy. It
+does not use University of Leeds logos, licensed typefaces or official page
+templates.
 
-You can hire Start Bootstrap to create a custom build of any template, or create something from scratch using Bootstrap. For more information, visit the **[custom design services page](https://startbootstrap.com/bootstrap-design-services/)**.
+## Licence
 
-## About
-
-Start Bootstrap is an open source library of free Bootstrap templates and themes. All of the free templates and themes on Start Bootstrap are released under the MIT license, which means you can use them for any purpose, even for commercial projects.
-
-* https://startbootstrap.com
-* https://twitter.com/SBootstrap
-
-Start Bootstrap was created by and is maintained by **[David Miller](http://davidmiller.io/)**, Owner of [Blackrock Digital](http://blackrockdigital.io/).
-
-* http://davidmiller.io
-* https://twitter.com/davidmillerskt
-* https://github.com/davidtmiller
-
-Start Bootstrap is based on the [Bootstrap](http://getbootstrap.com/) framework created by [Mark Otto](https://twitter.com/mdo) and [Jacob Thorton](https://twitter.com/fat).
-
-## Copyright and License
-
-Copyright 2013-2018 Blackrock Digital LLC. Code released under the [MIT](https://github.com/BlackrockDigital/startbootstrap-clean-blog/blob/gh-pages/LICENSE) license.
+The site source is available under the [MIT Licence](./LICENSE). Personal
+writing, CV content and photographs are excluded from that licence and remain
+copyright Kenji Hilasaca.

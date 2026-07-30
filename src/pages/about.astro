@@ -1,0 +1,440 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ArrowIcon from "../components/ArrowIcon.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import speakingImage from "../assets/kenji-speaking.jpg";
+import hackathonImage from "../assets/mining-energy-hackathon.png";
+import arlissImage from "../assets/arliss-team.jpg";
+import { Image } from "astro:assets";
+import { site } from "../data/site";
+---
+
+<BaseLayout
+  title="About — Kenji Hilasaca"
+  description="The journey of Kenji Hilasaca from mechatronics and entrepreneurship in Peru to Data & AI engineering and NLP research in Leeds."
+>
+  <header class="about-hero">
+    <div class="container about-hero__grid">
+      <div>
+        <p class="eyebrow">About</p>
+        <h1>Curiosity has always crossed disciplines.</h1>
+      </div>
+      <div class="about-hero__portrait">
+        <Image
+          src={speakingImage}
+          alt="Kenji Hilasaca speaking at a technology event"
+          widths={[360, 540]}
+          sizes="(max-width: 800px) 55vw, 24vw"
+          format="webp"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <p>Engineer · Researcher · Builder</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="section section--white story">
+    <div class="container story__grid">
+      <p class="eyebrow">The short version</p>
+      <div>
+        <p class="story__lead">
+          I’m a Data & AI Engineer based in Leeds, working at the intersection
+          of scalable data systems, applied machine learning and multilingual
+          NLP.
+        </p>
+        <div class="story__columns">
+          <p>
+            My path into data began in mechatronics in Peru, with early work in
+            robotics and control systems and an internship at UNICAMP in Brazil.
+            I later co-founded PlayTec and moved into software, data engineering
+            and applied ML across consulting and banking.
+          </p>
+          <p>
+            After completing an MSc in Data Science and Analytics with
+            Distinction at the University of Leeds, I joined the university as a
+            Research Assistant. Today, I build GPU-backed NLP pipelines and
+            research methods for aligning multilingual text for accessible
+            language technologies.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section journey">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Journey"
+        title="A progression, not a collection of unrelated chapters."
+      />
+      <div class="journey__line">
+        <article>
+          <span>Peru</span>
+          <h3>Engineering foundations</h3>
+          <p>
+            Mechatronics at UNI, early robotics research and a first
+            international publication on multi-robot exploration for mining.
+          </p>
+        </article>
+        <article>
+          <span>Brazil</span>
+          <h3>Research across borders</h3>
+          <p>
+            Control-system programming and simulation during an engineering
+            internship at UNICAMP.
+          </p>
+        </article>
+        <article>
+          <span>Industry</span>
+          <h3>Products, data and decisions</h3>
+          <p>
+            Entrepreneurship at PlayTec, applied analytics at INDRA and
+            distributed data engineering at BBVA.
+          </p>
+        </article>
+        <article>
+          <span>Leeds</span>
+          <h3>Data & AI research</h3>
+          <p>
+            An MSc with Distinction followed by multilingual NLP research at the
+            University of Leeds.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--teal recognition">
+    <div class="container recognition__grid">
+      <article>
+        <p class="eyebrow">Recognition · 2016</p>
+        <h2>First place, Mining & Energy Hackathon</h2>
+        <p>
+          Part of the winning team in a technology-for-social-responsibility
+          challenge organised by Peru’s National Society of Mining, Oil and
+          Energy and ESAN University.
+        </p>
+      </article>
+      <div class="recognition__image">
+        <Image
+          src={hackathonImage}
+          alt="Kenji and teammates receiving first place at the Mining and Energy Hackathon"
+          widths={[620, 1000]}
+          sizes="(max-width: 800px) 100vw, 52vw"
+          format="webp"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white beyond">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Beyond engineering"
+        title="Technology is always about people."
+      />
+      <div class="beyond__grid">
+        <div class="beyond__image">
+          <Image
+            src={arlissImage}
+            alt="Peruvian student engineering team at the ARLISS satellite competition"
+            widths={[620, 1000]}
+            sizes="(max-width: 800px) 100vw, 52vw"
+            format="webp"
+          />
+        </div>
+        <div class="beyond__copy">
+          <p class="lede">
+            Long before working in AI, I learnt to communicate through folk
+            music, film and teaching.
+          </p>
+          <p>
+            I grew up in Juliaca and took part in a regional film as a child,
+            played traditional music at school and later helped bring practical
+            technology education to students across Peru. I also joined the
+            ARLISS student satellite challenge in the United States.
+          </p>
+          <p>
+            Those experiences still shape how I work: stay curious, explain
+            clearly and build with the people affected by the system in mind.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section contact-strip">
+    <div class="narrow">
+      <p class="eyebrow">Based in Leeds</p>
+      <h2>Interested in useful data and AI systems?</h2>
+      <p class="lede">
+        I’m open to Data Engineering, ML Engineering and applied AI
+        opportunities across Leeds, Yorkshire and the wider UK.
+      </p>
+      <div class="contact-strip__links">
+        <a class="button" href={`mailto:${site.email}`}>
+          Email me
+          <ArrowIcon direction="up-right" />
+        </a>
+        <a class="button button--secondary" href={site.linkedin}>
+          LinkedIn
+          <ArrowIcon direction="up-right" />
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-hero {
+    padding-block: var(--space-8) var(--space-9);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .about-hero__grid {
+    display: grid;
+    grid-template-columns: 1fr 0.42fr;
+    gap: var(--space-8);
+    align-items: end;
+  }
+
+  .about-hero .eyebrow {
+    margin-bottom: var(--space-5);
+  }
+
+  .about-hero h1 {
+    max-width: 10ch;
+  }
+
+  .about-hero__portrait {
+    position: relative;
+    width: min(100%, 20rem);
+    justify-self: end;
+  }
+
+  .about-hero__portrait::after {
+    position: absolute;
+    z-index: -1;
+    inset: 1rem -1rem -1rem 1rem;
+    background: var(--mint);
+    content: "";
+  }
+
+  .about-hero__portrait :global(img) {
+    width: 100%;
+    aspect-ratio: 1 / 1.18;
+    object-fit: cover;
+    object-position: 50% 35%;
+    filter: saturate(0.72) contrast(1.05);
+  }
+
+  .about-hero__portrait p {
+    margin: var(--space-3) 0 0;
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+
+  .story__grid {
+    display: grid;
+    grid-template-columns: 0.35fr 1fr;
+    gap: var(--space-8);
+  }
+
+  .story__lead {
+    max-width: 40rem;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: var(--step-3);
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+  }
+
+  .story__columns {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+    margin-top: var(--space-6);
+    color: var(--muted);
+  }
+
+  .journey__line {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-block: 1px solid var(--line);
+  }
+
+  .journey article {
+    position: relative;
+    padding: var(--space-5);
+    border-right: 1px solid var(--line);
+  }
+
+  .journey article:first-child {
+    padding-left: 0;
+  }
+
+  .journey article:last-child {
+    padding-right: 0;
+    border-right: 0;
+  }
+
+  .journey article::before {
+    position: absolute;
+    top: -0.4rem;
+    left: var(--space-5);
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--brick);
+    content: "";
+  }
+
+  .journey article:first-child::before {
+    left: 0;
+  }
+
+  .journey span {
+    color: var(--teal);
+    font-size: var(--step--1);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .journey h3 {
+    min-height: 5.5rem;
+    margin-block: var(--space-5) var(--space-3);
+    font-size: var(--step-2);
+  }
+
+  .journey p {
+    color: var(--muted);
+  }
+
+  .recognition__grid {
+    display: grid;
+    grid-template-columns: 0.7fr 1fr;
+    gap: var(--space-8);
+    align-items: center;
+  }
+
+  .recognition h2 {
+    margin-block: var(--space-5);
+    font-size: var(--step-4);
+  }
+
+  .recognition article > p:last-child {
+    color: rgb(248 243 234 / 76%);
+  }
+
+  .recognition__image {
+    position: relative;
+  }
+
+  .recognition__image::after {
+    position: absolute;
+    inset: 1rem -1rem -1rem 1rem;
+    border: 1px solid var(--mint);
+    content: "";
+    pointer-events: none;
+  }
+
+  .recognition__image :global(img) {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .beyond__grid {
+    display: grid;
+    grid-template-columns: 1fr 0.8fr;
+    gap: var(--space-8);
+    align-items: center;
+  }
+
+  .beyond__image :global(img) {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    filter: saturate(0.72) contrast(1.05);
+  }
+
+  .beyond__copy > p:not(.lede) {
+    color: var(--muted);
+  }
+
+  .contact-strip {
+    text-align: center;
+  }
+
+  .contact-strip h2 {
+    margin-block: var(--space-5);
+    font-size: var(--step-4);
+  }
+
+  .contact-strip .lede {
+    margin-inline: auto;
+  }
+
+  .contact-strip__links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+
+  @media (max-width: 64rem) {
+    .journey__line {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .journey article:nth-child(2) {
+      border-right: 0;
+    }
+
+    .journey article:nth-child(-n + 2) {
+      border-bottom: 1px solid var(--line);
+    }
+  }
+
+  @media (max-width: 50rem) {
+    .about-hero__grid,
+    .story__grid,
+    .recognition__grid,
+    .beyond__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .about-hero__portrait {
+      justify-self: start;
+    }
+
+    .story__columns {
+      grid-template-columns: 1fr;
+    }
+
+    .journey__line {
+      grid-template-columns: 1fr;
+    }
+
+    .journey article,
+    .journey article:first-child,
+    .journey article:last-child {
+      padding: var(--space-5) 0;
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .journey article::before,
+    .journey article:first-child::before {
+      left: 0;
+    }
+
+    .journey h3 {
+      min-height: auto;
+    }
+  }
+</style>

@@ -1,0 +1,432 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArrowIcon from "../../components/ArrowIcon.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import { projects } from "../../data/site";
+import { caseStudies } from "../../data/caseStudies";
+
+export function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project, study: caseStudies[project.slug] },
+  }));
+}
+
+const { project, study } = Astro.props;
+---
+
+<BaseLayout
+  title={`${project.title} — Kenji Hilasaca`}
+  description={study.summary}
+>
+  <header class="case-hero">
+    <div class="container">
+      <a class="back-link" href="/work/">
+        <span aria-hidden="true">←</span>
+        Selected work
+      </a>
+      <div class="case-hero__grid">
+        <div>
+          <p class="eyebrow">{study.status}</p>
+          <h1>{project.title}</h1>
+        </div>
+        <p class="lede">{study.summary}</p>
+      </div>
+      <ul class="tag-list" aria-label="Technologies">
+        {project.tags.map((tag: string) => <li>{tag}</li>)}
+      </ul>
+    </div>
+  </header>
+
+  <section class="section case-overview">
+    <div class="container case-overview__grid">
+      <article>
+        <p class="eyebrow">Challenge</p>
+        <p>{study.challenge}</p>
+      </article>
+      <article>
+        <p class="eyebrow">My role</p>
+        <p>{study.role}</p>
+      </article>
+      <article>
+        <p class="eyebrow">Outcome</p>
+        <p>{study.result}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section section--teal metrics">
+    <div class="container">
+      <p class="eyebrow">At a glance</p>
+      <div class="metrics__grid">
+        {
+          study.metrics.map((metric: { value: string; label: string }) => (
+            <div>
+              <strong>{metric.value}</strong>
+              <span>{metric.label}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white pipeline">
+    <div class="container">
+      <SectionHeading
+        eyebrow="System view"
+        title="The workflow."
+        intro="A simplified view of the stages and boundaries that shape the project."
+      />
+      <ol class="pipeline__flow">
+        {
+          study.pipeline.map((step: string, index: number) => (
+            <li>
+              <span>0{index + 1}</span>
+              <strong>{step}</strong>
+              {index < study.pipeline.length - 1 && (
+                <ArrowIcon direction="right" />
+              )}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section approach">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Approach"
+        title="Decisions that shaped the work."
+      />
+      <div class="approach__list">
+        {
+          study.approach.map(
+            (item: { title: string; text: string }, index: number) => (
+              <article>
+                <span>0{index + 1}</span>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </article>
+            ),
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white findings">
+    <div class="container findings__grid">
+      <div>
+        <p class="eyebrow">Findings</p>
+        <h2>What the evidence says.</h2>
+      </div>
+      <ul>
+        {study.findings.map((finding: string) => <li>{finding}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section reflection">
+    <div class="narrow">
+      <p class="eyebrow">Engineering reflection</p>
+      <blockquote>{study.reflection}</blockquote>
+      <div class="case-links">
+        <a class="button" href={project.github}>
+          View repository
+          <ArrowIcon direction="up-right" />
+        </a>
+        {
+          project.paper && (
+            <a class="button button--secondary" href={project.paper}>
+              Read the paper
+              <ArrowIcon direction="up-right" />
+            </a>
+          )
+        }
+        {
+          project.demo && (
+            <a class="button button--secondary" href={project.demo}>
+              Open demo
+              <ArrowIcon direction="up-right" />
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .case-hero {
+    padding-block: var(--space-6) var(--space-9);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .back-link {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: var(--space-8);
+    color: var(--muted);
+    font-size: var(--step--1);
+    text-decoration: none;
+  }
+
+  .case-hero__grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: var(--space-7);
+    align-items: end;
+  }
+
+  .case-hero .eyebrow {
+    margin-bottom: var(--space-4);
+  }
+
+  .case-hero h1 {
+    max-width: 11ch;
+  }
+
+  .case-hero .lede {
+    margin: 0;
+  }
+
+  .case-hero .tag-list {
+    margin-top: var(--space-6);
+  }
+
+  .case-overview__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-block: 1px solid var(--line);
+  }
+
+  .case-overview article {
+    padding: var(--space-5);
+    border-right: 1px solid var(--line);
+  }
+
+  .case-overview article:first-child {
+    padding-left: 0;
+  }
+
+  .case-overview article:last-child {
+    padding-right: 0;
+    border-right: 0;
+  }
+
+  .case-overview article > p:last-child {
+    margin: var(--space-5) 0 0;
+    color: var(--muted);
+  }
+
+  .metrics .eyebrow {
+    margin-bottom: var(--space-6);
+  }
+
+  .metrics__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .metrics__grid div {
+    display: flex;
+    min-height: 13rem;
+    padding: var(--space-5);
+    flex-direction: column;
+    justify-content: center;
+    border-left: 1px solid rgb(248 243 234 / 24%);
+  }
+
+  .metrics__grid div:last-child {
+    border-right: 1px solid rgb(248 243 234 / 24%);
+  }
+
+  .metrics strong {
+    color: var(--mint);
+    font-family: var(--font-serif);
+    font-size: var(--step-5);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  .metrics span {
+    margin-top: var(--space-3);
+    color: rgb(248 243 234 / 72%);
+  }
+
+  .pipeline__flow {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    border-block: 1px solid var(--line);
+  }
+
+  .pipeline__flow li {
+    position: relative;
+    display: flex;
+    min-height: 10rem;
+    padding: var(--space-4);
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid var(--line);
+  }
+
+  .pipeline__flow li:first-child {
+    border-left: 1px solid var(--line);
+  }
+
+  .pipeline__flow li > span {
+    color: var(--brick);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+
+  .pipeline__flow strong {
+    font-size: var(--step--1);
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .pipeline__flow :global(svg) {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    right: -0.55rem;
+    padding: 0.15rem;
+    background: var(--white);
+    color: var(--teal);
+  }
+
+  .approach__list {
+    border-top: 1px solid var(--line);
+  }
+
+  .approach article {
+    display: grid;
+    grid-template-columns: 0.18fr 0.7fr 1fr;
+    padding-block: var(--space-5);
+    border-bottom: 1px solid var(--line);
+    gap: var(--space-5);
+    align-items: start;
+  }
+
+  .approach article > span {
+    color: var(--brick);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+
+  .approach h3 {
+    font-size: var(--step-2);
+  }
+
+  .approach p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .findings__grid {
+    display: grid;
+    grid-template-columns: 0.7fr 1.3fr;
+    gap: var(--space-8);
+  }
+
+  .findings h2 {
+    max-width: 12ch;
+    margin-top: var(--space-5);
+    font-size: var(--step-4);
+  }
+
+  .findings ul {
+    border-top: 1px solid var(--line);
+  }
+
+  .findings li {
+    position: relative;
+    padding: var(--space-5) 0 var(--space-5) var(--space-6);
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+  }
+
+  .findings li::before {
+    position: absolute;
+    top: var(--space-5);
+    left: 0;
+    color: var(--teal);
+    content: "◆";
+    font-size: 0.65rem;
+  }
+
+  .reflection blockquote {
+    margin: var(--space-5) 0 0;
+    padding: 0;
+    border: 0;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: var(--step-3);
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+  }
+
+  .case-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+
+  @media (max-width: 64rem) {
+    .case-hero__grid,
+    .findings__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .case-overview__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .case-overview article,
+    .case-overview article:first-child,
+    .case-overview article:last-child {
+      padding: var(--space-5) 0;
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pipeline__flow {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 45rem) {
+    .metrics__grid,
+    .pipeline__flow {
+      grid-template-columns: 1fr;
+    }
+
+    .metrics__grid div,
+    .metrics__grid div:last-child {
+      min-height: 9rem;
+      border-right: 1px solid rgb(248 243 234 / 24%);
+      border-bottom: 1px solid rgb(248 243 234 / 24%);
+    }
+
+    .pipeline__flow li {
+      min-height: 7rem;
+      border-left: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pipeline__flow :global(svg) {
+      display: none;
+    }
+
+    .approach article {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+  }
+</style>

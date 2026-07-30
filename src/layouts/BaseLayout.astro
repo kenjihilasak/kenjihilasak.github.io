@@ -1,0 +1,317 @@
+---
+import "../styles/global.css";
+import ArrowIcon from "../components/ArrowIcon.astro";
+import { site } from "../data/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = `${site.name} — ${site.role}`,
+  description = site.description,
+  image = `${site.url}/og-image.png`,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, site.url);
+const currentPath = Astro.url.pathname;
+const nav = [
+  { href: "/work/", label: "Work" },
+  { href: "/experience/", label: "Experience" },
+  { href: "/research/", label: "Research" },
+  { href: "/about/", label: "About" },
+];
+
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: site.name,
+  url: site.url,
+  jobTitle: site.role,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Leeds",
+    addressCountry: "GB",
+  },
+  sameAs: [site.github, site.linkedin],
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "University of Leeds",
+  },
+};
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="author" content={site.name} />
+    <meta name="theme-color" content="#145f58" />
+    <meta name="color-scheme" content="light" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta
+      property="og:image:alt"
+      content="Kenji Hilasaca — Data & AI Engineer in Leeds, UK"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_GB" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <meta
+      name="twitter:image:alt"
+      content="Kenji Hilasaca — Data & AI Engineer in Leeds, UK"
+    />
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(personSchema)}
+    />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="brand" href="/">
+          <span class="brand__mark">KH</span>
+          <span class="brand__name">Kenji Hilasaca</span>
+        </a>
+        <nav aria-label="Primary navigation">
+          <ul>
+            {
+              nav.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    aria-current={
+                      currentPath.startsWith(item.href) ? "page" : undefined
+                    }
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+        <a class="header-contact" href={`mailto:${site.email}`}>
+          Get in touch
+          <ArrowIcon direction="up-right" />
+        </a>
+      </div>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        <div class="site-footer__cta">
+          <p class="eyebrow">Let’s build something useful</p>
+          <h2>Data, AI and research—made operational.</h2>
+          <a class="button button--light" href={`mailto:${site.email}`}>
+            Start a conversation
+            <ArrowIcon direction="up-right" />
+          </a>
+        </div>
+        <div class="site-footer__bottom">
+          <p>© {new Date().getFullYear()} {site.name}</p>
+          <p>{site.location}</p>
+          <ul>
+            <li><a href={site.github}>GitHub</a></li>
+            <li><a href={site.linkedin}>LinkedIn</a></li>
+            <li><a href={site.cv}>CV</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 20;
+    border-bottom: 1px solid var(--line);
+    background: rgb(248 243 234 / 94%);
+  }
+
+  .site-header__inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    min-height: 5.25rem;
+    gap: var(--space-5);
+    align-items: center;
+  }
+
+  .brand {
+    display: inline-flex;
+    width: fit-content;
+    gap: 0.75rem;
+    align-items: center;
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .brand:hover {
+    color: var(--ink);
+  }
+
+  .brand__mark {
+    display: grid;
+    width: 2.25rem;
+    height: 2.25rem;
+    place-items: center;
+    background: var(--teal);
+    color: var(--white);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+  }
+
+  nav ul {
+    display: flex;
+    gap: clamp(1rem, 2.5vw, 2.5rem);
+  }
+
+  nav a,
+  .header-contact {
+    position: relative;
+    color: var(--ink);
+    font-size: var(--step--1);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  nav a::after {
+    position: absolute;
+    right: 0;
+    bottom: -0.55rem;
+    left: 0;
+    height: 2px;
+    transform: scaleX(0);
+    transform-origin: left;
+    background: var(--brick);
+    content: "";
+    transition: transform 160ms ease;
+  }
+
+  nav a:hover::after,
+  nav a[aria-current="page"]::after {
+    transform: scaleX(1);
+  }
+
+  .header-contact {
+    display: inline-flex;
+    justify-self: end;
+    gap: 0.4rem;
+    align-items: center;
+  }
+
+  .site-footer {
+    padding-top: var(--space-9);
+    background: var(--teal-dark);
+    color: var(--paper);
+  }
+
+  .site-footer__cta {
+    display: grid;
+    grid-template-columns: 0.45fr 1fr auto;
+    padding-bottom: var(--space-8);
+    gap: var(--space-6);
+    align-items: end;
+  }
+
+  .site-footer .eyebrow {
+    align-self: start;
+    color: var(--mint);
+  }
+
+  .site-footer h2 {
+    max-width: 13ch;
+    font-size: var(--step-4);
+  }
+
+  .site-footer__bottom {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    padding-block: var(--space-4);
+    border-top: 1px solid rgb(248 243 234 / 22%);
+    gap: var(--space-5);
+    color: rgb(248 243 234 / 72%);
+    font-size: var(--step--1);
+  }
+
+  .site-footer__bottom p {
+    margin: 0;
+  }
+
+  .site-footer__bottom ul {
+    display: flex;
+    justify-self: end;
+    gap: var(--space-4);
+  }
+
+  .site-footer__bottom a {
+    color: inherit;
+  }
+
+  @media (max-width: 62rem) {
+    .site-header__inner {
+      grid-template-columns: auto 1fr;
+      padding-block: var(--space-3);
+    }
+
+    nav {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      overflow-x: auto;
+    }
+
+    nav ul {
+      justify-content: space-between;
+    }
+
+    .header-contact {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .site-footer__cta {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .site-footer__cta .button {
+      width: fit-content;
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .brand__name {
+      display: none;
+    }
+
+    .site-footer__bottom {
+      grid-template-columns: 1fr;
+    }
+
+    .site-footer__bottom ul {
+      justify-self: start;
+    }
+  }
+</style>
