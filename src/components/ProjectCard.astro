@@ -1,0 +1,127 @@
+---
+import ArrowIcon from "./ArrowIcon.astro";
+import type { Project } from "../data/site";
+
+interface Props {
+  project: Project;
+  index: number;
+  headingLevel?: "h2" | "h3";
+}
+
+const { project, index, headingLevel = "h3" } = Astro.props;
+const Heading = headingLevel;
+---
+
+<article class="project-card">
+  <div class="project-card__top">
+    <span class="project-card__number" aria-hidden="true">0{index + 1}</span>
+    <p class="eyebrow">{project.eyebrow}</p>
+  </div>
+  <div class="project-card__body">
+    <Heading>{project.title}</Heading>
+    <p>{project.description}</p>
+    <p class="project-card__outcome">{project.outcome}</p>
+  </div>
+  <ul class="tag-list" aria-label="Technologies">
+    {project.tags.map((tag) => <li>{tag}</li>)}
+  </ul>
+  <div class="project-card__links">
+    <a href={`/work/${project.slug}/`}>
+      Case study
+      <ArrowIcon />
+    </a>
+    <a href={project.github}>
+      GitHub
+      <ArrowIcon direction="up-right" />
+    </a>
+  </div>
+</article>
+
+<style>
+  .project-card {
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+    min-height: 33rem;
+    padding: var(--space-5);
+    border: 1px solid var(--line);
+    background: var(--paper);
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .project-card:hover {
+    transform: translateY(-0.25rem);
+    box-shadow: 0 1.25rem 3rem rgb(17 21 19 / 8%);
+  }
+
+  .project-card__top,
+  .project-card__links {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    align-items: baseline;
+  }
+
+  .project-card__number {
+    color: var(--teal);
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+
+  .project-card__top .eyebrow {
+    text-align: right;
+  }
+
+  .project-card__body {
+    padding-top: var(--space-6);
+  }
+
+  h2,
+  h3 {
+    margin-bottom: var(--space-4);
+    font-size: var(--step-4);
+  }
+
+  .project-card__body p {
+    color: var(--muted);
+  }
+
+  .project-card__outcome {
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+    color: var(--ink) !important;
+    font-weight: 500;
+  }
+
+  .tag-list {
+    margin-top: var(--space-5);
+  }
+
+  .project-card__links {
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+
+  .project-card__links a {
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+    color: var(--ink);
+    font-size: var(--step--1);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .project-card__links a:hover {
+    color: var(--brick);
+  }
+
+  @media (max-width: 45rem) {
+    .project-card {
+      min-height: auto;
+    }
+  }
+</style>

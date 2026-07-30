@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ArrowIcon from "../components/ArrowIcon.astro";
+---
+
+<BaseLayout
+  title="Page not found — Kenji Hilasaca"
+  description="The requested page could not be found."
+>
+  <section class="not-found">
+    <div class="narrow">
+      <p class="eyebrow">Error 404</p>
+      <h1>This path leads somewhere else.</h1>
+      <p class="lede">
+        The page may have moved during the portfolio rebuild. The work and
+        research are still here.
+      </p>
+      <a class="button" href="/">
+        Return home
+        <ArrowIcon />
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    display: grid;
+    min-height: 70vh;
+    padding-block: var(--space-9);
+    place-items: center;
+  }
+
+  .not-found h1 {
+    max-width: 10ch;
+    margin-block: var(--space-5);
+  }
+
+  .not-found .button {
+    margin-top: var(--space-5);
+  }
+</style>

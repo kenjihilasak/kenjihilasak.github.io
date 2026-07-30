@@ -1,0 +1,16 @@
+{
+  "name": "Kenji Hilasaca — Data & AI Engineer",
+  "short_name": "Kenji Hilasaca",
+  "description": "Professional portfolio of Kenji Hilasaca, Data & AI Engineer.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8f3ea",
+  "theme_color": "#145f58",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -1,42 +1,39 @@
 {
-    "title": "Clean Blog",
-    "name": "startbootstrap-clean-blog",
-    "version": "4.0.0",
-    "description": "Clean Blog is a Medium inspired blog theme for Bootstrap.",
-    "keywords": [
-        "css",
-        "sass",
-        "html",
-        "responsive",
-        "theme",
-        "template"
-    ],
-    "homepage": "https://startbootstrap.com/template-overviews/clean-blog",
-    "bugs": {
-        "url": "https://github.com/BlackrockDigital/startbootstrap-clean-blog/issues",
-        "email": "feedback@startbootstrap.com"
-    },
-    "license": "MIT",
-    "author": "Start Bootstrap",
-    "contributors": [
-        "David Miller (http://davidmiller.io/)"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/BlackrockDigital/startbootstrap-clean-blog.git"
-    },
-    "dependencies": {
-        "bootstrap": "4.0.0",
-        "font-awesome": "4.7.0",
-        "jquery": "3.3.1"
-    },
-    "devDependencies": {
-        "browser-sync": "2.23.6",
-        "gulp": "^3.9.1",
-        "gulp-clean-css": "3.9.2",
-        "gulp-header": "2.0.1",
-        "gulp-rename": "^1.2.2",
-        "gulp-sass": "^3.1.0",
-        "gulp-uglify": "3.0.0"
-    }
+  "name": "kenji-hilasaca-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Professional portfolio for Kenji Hilasaca, a Data & AI Engineer based in Leeds, UK.",
+  "scripts": {
+    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro check && ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
+    "check:links": "node scripts/check-links.mjs",
+    "generate:og": "node scripts/generate-og.mjs",
+    "audit": "lhci autorun",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "@fontsource/ibm-plex-sans": "^5.2.7",
+    "@fontsource/source-serif-4": "^5.2.8",
+    "astro": "^7.1.6"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@lhci/cli": "^0.15.1",
+    "prettier": "^3.6.2",
+    "prettier-plugin-astro": "^0.14.1",
+    "sharp": "^0.34.3",
+    "typescript": "^5.9.2"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "sharp@0.34.5": true
+  }
 }

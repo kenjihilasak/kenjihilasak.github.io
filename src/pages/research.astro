@@ -1,0 +1,310 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ArrowIcon from "../components/ArrowIcon.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import musmeImage from "../assets/musme-presentation.jpg";
+import { Image } from "astro:assets";
+
+const researchSchema = {
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  headline:
+    "Align and Shine: Building High-Quality Sentence-Aligned Corpora for Multilingual Text Simplification",
+  author: [
+    { "@type": "Person", name: "Kenji Hilasaca" },
+    { "@type": "Person", name: "Nouran Khallaf" },
+    { "@type": "Person", name: "Serge Sharoff" },
+  ],
+  datePublished: "2026-05-10",
+  url: "https://arxiv.org/abs/2605.09476",
+  sameAs: "https://doi.org/10.48550/arXiv.2605.09476",
+  about: ["Text simplification", "Multilingual NLP", "Sentence alignment"],
+};
+---
+
+<BaseLayout
+  title="Research — Kenji Hilasaca"
+  description="Research by Kenji Hilasaca in multilingual NLP, accessible language technologies and multi-robot exploration."
+>
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(researchSchema)}
+  />
+  <header class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Research</p>
+      <h1>Language technology with accessible outcomes.</h1>
+      <p class="lede">
+        My current research connects multilingual NLP with the data
+        infrastructure needed to make complex information easier to access.
+      </p>
+    </div>
+  </header>
+
+  <section class="section section--white publication-feature">
+    <div class="container publication-feature__grid">
+      <div>
+        <p class="eyebrow">Peer-reviewed · LREC-BUCC 2026</p>
+        <div class="publication-feature__year" aria-hidden="true">’26</div>
+      </div>
+      <article>
+        <h2>
+          Align and Shine: Building High-Quality Sentence-Aligned Corpora for
+          Multilingual Text Simplification
+        </h2>
+        <p class="authors">Kenji Hilasaca · Nouran Khallaf · Serge Sharoff</p>
+        <p class="lede">
+          An experimental study of sentence alignment from document-level,
+          crowdsourced simplification data across Catalan, English, French,
+          Italian and Spanish.
+        </p>
+        <p>
+          The resulting corpus provides consistent multilingual data for
+          training and evaluating text-simplification systems, including the
+          first large open-source resource of its kind for Catalan and Spanish.
+        </p>
+        <div class="publication-links">
+          <a class="button" href="https://arxiv.org/abs/2605.09476">
+            Read paper
+            <ArrowIcon direction="up-right" />
+          </a>
+          <a
+            class="button button--secondary"
+            href="https://github.com/kenjihilasak/Align-and-Shine"
+          >
+            Code and data
+            <ArrowIcon direction="up-right" />
+          </a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section research-focus">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Research focus"
+        title="The infrastructure behind accessible NLP."
+      />
+      <div class="focus-grid">
+        <article>
+          <span>01</span>
+          <h3>Multilingual data</h3>
+          <p>
+            Extracting useful parallel data where high-quality labelled
+            resources are scarce.
+          </p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Sentence alignment</h3>
+          <p>
+            Comparing embedding and alignment methods for noisy, document-level
+            corpora.
+          </p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Reproducible pipelines</h3>
+          <p>
+            Treating research datasets as traceable products with visible
+            provenance and quality checks.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--teal early-research">
+    <div class="container early-research__grid">
+      <div class="early-research__image">
+        <Image
+          src={musmeImage}
+          alt="Kenji presenting early multi-robot mining research at a conference"
+          widths={[540, 900]}
+          sizes="(max-width: 800px) 100vw, 42vw"
+          format="webp"
+        />
+      </div>
+      <article>
+        <p class="eyebrow">Earlier research · MUSME 2014</p>
+        <h2>
+          Multi-robot Exploration and Mapping Strategy in Underground Mines by
+          Behavior Control
+        </h2>
+        <p>
+          My first international publication explored robot coordination,
+          mapping and sensor-based navigation for high-risk underground mining
+          environments.
+        </p>
+        <p class="citation">
+          A. Mauricio, A. Nieves, Y. Castillo, K. Hilasaca et al. <em
+            >Multibody Mechatronic Systems</em
+          >, Springer, 2015, pp. 101–110.
+        </p>
+        <a
+          class="text-link"
+          href="https://doi.org/10.1007/978-3-319-09858-6_10"
+        >
+          View publication
+          <ArrowIcon direction="up-right" />
+        </a>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .publication-feature__grid {
+    display: grid;
+    grid-template-columns: 0.35fr 1fr;
+    gap: var(--space-8);
+  }
+
+  .publication-feature__year {
+    margin-top: var(--space-7);
+    color: var(--mint);
+    font-family: var(--font-serif);
+    font-size: var(--step-6);
+    line-height: 0.8;
+  }
+
+  .publication-feature h2 {
+    max-width: 18ch;
+    font-size: var(--step-4);
+    line-height: 1.08;
+  }
+
+  .authors {
+    margin-block: var(--space-4) var(--space-6);
+    color: var(--teal);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+
+  .publication-feature article > p:not(.authors, .lede) {
+    max-width: 45rem;
+    color: var(--muted);
+  }
+
+  .publication-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+
+  .focus-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-block: 1px solid var(--line);
+  }
+
+  .focus-grid article {
+    padding: var(--space-5);
+    border-right: 1px solid var(--line);
+  }
+
+  .focus-grid article:first-child {
+    padding-left: 0;
+  }
+
+  .focus-grid article:last-child {
+    padding-right: 0;
+    border-right: 0;
+  }
+
+  .focus-grid span {
+    color: var(--brick);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+
+  .focus-grid h3 {
+    margin-block: var(--space-5) var(--space-3);
+    font-size: var(--step-2);
+  }
+
+  .focus-grid p {
+    color: var(--muted);
+  }
+
+  .early-research__grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1fr;
+    gap: var(--space-8);
+    align-items: center;
+  }
+
+  .early-research__image {
+    position: relative;
+  }
+
+  .early-research__image::before {
+    position: absolute;
+    z-index: 1;
+    inset: 1rem -1rem -1rem 1rem;
+    border: 1px solid var(--mint);
+    content: "";
+    pointer-events: none;
+  }
+
+  .early-research__image :global(img) {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    filter: saturate(0.72) contrast(1.05);
+  }
+
+  .early-research h2 {
+    margin-block: var(--space-5);
+    font-size: var(--step-3);
+    line-height: 1.08;
+  }
+
+  .early-research article > p:not(.eyebrow) {
+    color: rgb(248 243 234 / 76%);
+  }
+
+  .citation {
+    padding-top: var(--space-4);
+    border-top: 1px solid rgb(248 243 234 / 24%);
+    font-size: var(--step--1);
+  }
+
+  .text-link {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    margin-top: var(--space-4);
+    color: var(--mint);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  @media (max-width: 58rem) {
+    .publication-feature__grid,
+    .early-research__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .publication-feature__year {
+      display: none;
+    }
+
+    .focus-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .focus-grid article,
+    .focus-grid article:first-child,
+    .focus-grid article:last-child {
+      padding: var(--space-5) 0;
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+  }
+</style>
