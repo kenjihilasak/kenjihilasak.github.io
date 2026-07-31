@@ -2,7 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ArrowIcon from "../components/ArrowIcon.astro";
 import SectionHeading from "../components/SectionHeading.astro";
-import speakingImage from "../assets/kenji-speaking.jpg";
+import profileImage from "../assets/kenji-profile.jpg";
 import hackathonImage from "../assets/mining-energy-hackathon.png";
 import arlissImage from "../assets/arliss-team.jpg";
 import { Image } from "astro:assets";
@@ -11,25 +11,25 @@ import { site } from "../data/site";
 
 <BaseLayout
   title="About — Kenji Hilasaca"
-  description="The journey of Kenji Hilasaca from mechatronics and entrepreneurship in Peru to Data & AI engineering and NLP research in Leeds."
+  description="The journey of Kenji Hilasaca from mechatronics and entrepreneurship in Peru to building dependable data and AI systems in Leeds."
 >
   <header class="about-hero">
     <div class="container about-hero__grid">
       <div>
         <p class="eyebrow">About</p>
-        <h1>Curiosity has always crossed disciplines.</h1>
+        <h1>I connect technical depth with practical outcomes.</h1>
       </div>
       <div class="about-hero__portrait">
         <Image
-          src={speakingImage}
-          alt="Kenji Hilasaca speaking at a technology event"
-          widths={[360, 540]}
-          sizes="(max-width: 800px) 55vw, 24vw"
+          src={profileImage}
+          alt="Kenji Hilasaca wearing a dark suit against a white studio background"
+          widths={[400, 640, 900]}
+          sizes="(max-width: 800px) 72vw, 28vw"
           format="webp"
           loading="eager"
           fetchpriority="high"
         />
-        <p>Engineer · Researcher · Builder</p>
+        <p>Data & AI Engineer · Leeds, UK</p>
       </div>
     </div>
   </header>
@@ -39,23 +39,23 @@ import { site } from "../data/site";
       <p class="eyebrow">The short version</p>
       <div>
         <p class="story__lead">
-          I’m a Data & AI Engineer based in Leeds, working at the intersection
-          of scalable data systems, applied machine learning and multilingual
-          NLP.
+          I help turn complex data into dependable pipelines, well-evaluated
+          models and clearer decisions.
         </p>
         <div class="story__columns">
           <p>
-            My path into data began in mechatronics in Peru, with early work in
-            robotics and control systems and an internship at UNICAMP in Brazil.
-            I later co-founded PlayTec and moved into software, data engineering
-            and applied ML across consulting and banking.
+            My experience spans corporate banking at BBVA, analytics consulting
+            at INDRA, software entrepreneurship at PlayTec and applied NLP at
+            the University of Leeds. Across those environments, the work has
+            been consistent: clarify the problem, build the data foundation,
+            test assumptions and make the result usable.
           </p>
           <p>
-            After completing an MSc in Data Science and Analytics with
-            Distinction at the University of Leeds, I joined the university as a
-            Research Assistant. Today, I build GPU-backed NLP pipelines and
-            research methods for aligning multilingual text for accessible
-            language technologies.
+            My engineering foundation began in mechatronics in Peru and expanded
+            through an internship at UNICAMP, product delivery, distributed data
+            systems and an MSc with Distinction. That breadth lets me move
+            comfortably between code, modelling, infrastructure and stakeholder
+            context.
           </p>
         </div>
       </div>
@@ -70,35 +70,35 @@ import { site } from "../data/site";
       />
       <div class="journey__line">
         <article>
-          <span>Peru</span>
-          <h3>Engineering foundations</h3>
+          <span>Engineering</span>
+          <h3>Foundations and entrepreneurship</h3>
           <p>
-            Mechatronics at UNI, early robotics research and a first
-            international publication on multi-robot exploration for mining.
+            Mechatronics at UNI, an engineering internship at UNICAMP and
+            co-founding PlayTec to deliver software and technology education.
           </p>
         </article>
         <article>
-          <span>Brazil</span>
-          <h3>Research across borders</h3>
+          <span>Consulting</span>
+          <h3>Data for operational decisions</h3>
           <p>
-            Control-system programming and simulation during an engineering
-            internship at UNICAMP.
+            Python and SQL pipelines at INDRA, connecting model outputs with
+            finance and operations decisions.
           </p>
         </article>
         <article>
-          <span>Industry</span>
-          <h3>Products, data and decisions</h3>
+          <span>Banking</span>
+          <h3>Distributed systems at scale</h3>
           <p>
-            Entrepreneurship at PlayTec, applied analytics at INDRA and
-            distributed data engineering at BBVA.
+            PySpark, Hadoop, AWS and APIs at BBVA, improving the speed and
+            reliability of corporate-banking workflows.
           </p>
         </article>
         <article>
           <span>Leeds</span>
-          <h3>Data & AI research</h3>
+          <h3>Applied AI at scale</h3>
           <p>
-            An MSc with Distinction followed by multilingual NLP research at the
-            University of Leeds.
+            An MSc with Distinction followed by GPU-backed multilingual data
+            pipelines at the University of Leeds.
           </p>
         </article>
       </div>
@@ -223,10 +223,11 @@ import { site } from "../data/site";
 
   .about-hero__portrait :global(img) {
     width: 100%;
-    aspect-ratio: 1 / 1.18;
+    height: 25rem;
+    aspect-ratio: 4 / 5;
     object-fit: cover;
-    object-position: 50% 35%;
-    filter: saturate(0.72) contrast(1.05);
+    object-position: 50% 20%;
+    filter: saturate(0.9) contrast(1.02);
   }
 
   .about-hero__portrait p {
@@ -410,6 +411,10 @@ import { site } from "../data/site";
 
     .about-hero__portrait {
       justify-self: start;
+    }
+
+    .about-hero__portrait :global(img) {
+      height: min(110vw, 25rem);
     }
 
     .story__columns {

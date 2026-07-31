@@ -5,7 +5,13 @@ import { launch } from "chrome-launcher";
 import lighthouse from "lighthouse";
 
 const root = resolve("dist");
-const routes = ["/", "/work/", "/research/", "/about/"];
+const routes = [
+  "/",
+  "/work/",
+  "/experience/",
+  "/about/",
+  "/work/align-and-shine/",
+];
 const thresholds = {
   performance: 0.9,
   accessibility: 0.95,

@@ -2,20 +2,22 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ArrowIcon from "../components/ArrowIcon.astro";
 import SectionHeading from "../components/SectionHeading.astro";
-import { capabilities, experience, site } from "../data/site";
+import graduationImage from "../assets/graduation-leeds.jpg";
+import { Image } from "astro:assets";
+import { experience, site } from "../data/site";
 ---
 
 <BaseLayout
   title="Experience — Kenji Hilasaca"
-  description="Kenji Hilasaca's experience across data engineering, applied machine learning, NLP research and software delivery."
+  description="Kenji Hilasaca's experience across data engineering, applied machine learning, banking, consulting and software delivery."
 >
   <header class="page-hero">
     <div class="container">
       <p class="eyebrow">Experience</p>
-      <h1>Systems built in the real world.</h1>
+      <h1>Data and AI systems built around real outcomes.</h1>
       <p class="lede">
-        Six years across research, financial services, consulting and
-        entrepreneurship—working from data foundations through to usable
+        Six years across banking, consulting, software and applied NLP—from
+        distributed pipelines and APIs to model evaluation and multilingual data
         products.
       </p>
     </div>
@@ -57,17 +59,17 @@ import { capabilities, experience, site } from "../data/site";
       />
       <div class="impact__grid">
         <article>
-          <strong>48 → 6 hours</strong>
+          <strong>50%</strong>
           <p>
-            Reduced the runtime of a core NLP extraction workflow on shared
-            research compute.
+            Reduced processing latency in distributed corporate-banking data
+            workflows.
           </p>
         </article>
         <article>
-          <strong>50%</strong>
+          <strong>48 → 6 hours</strong>
           <p>
-            Reduced processing latency while building distributed data workflows
-            in corporate banking.
+            Reduced a core multilingual data-workflow runtime on shared Linux
+            and GPU infrastructure.
           </p>
         </article>
         <article>
@@ -81,55 +83,50 @@ import { capabilities, experience, site } from "../data/site";
     </div>
   </section>
 
-  <section class="section section--teal">
-    <div class="container">
-      <SectionHeading
-        eyebrow="Capabilities"
-        title="A connected engineering toolkit."
-        intro="Technologies matter when they support a sound decision, a dependable workflow or a maintainable product."
-      />
-      <div class="capabilities">
-        {
-          capabilities.map((capability) => (
-            <article>
-              <span>{capability.number}</span>
-              <h3>{capability.title}</h3>
-              <p>{capability.text}</p>
-              <small>{capability.tools}</small>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
   <section class="section education">
     <div class="container">
       <SectionHeading
         eyebrow="Education"
         title="Foundations and progression."
       />
-      <div class="education__list">
-        <article>
-          <p>2024 — 2025 · United Kingdom</p>
-          <h3>MSc Data Science & Analytics · Distinction</h3>
-          <span>University of Leeds</span>
-        </article>
-        <article>
-          <p>2022 — 2023 · Remote</p>
-          <h3>MicroMasters programme · Statistics and Data Science</h3>
-          <span>MITx</span>
-        </article>
-        <article>
-          <p>2010 — 2016 · Peru</p>
-          <h3>BSc Mechatronic Engineering</h3>
-          <span>National University of Engineering</span>
-        </article>
+      <div class="education__grid">
+        <div>
+          <div class="education__list">
+            <article>
+              <p>2024 — 2025 · United Kingdom</p>
+              <h3>MSc Data Science & Analytics · Distinction</h3>
+              <span>University of Leeds</span>
+            </article>
+            <article>
+              <p>2022 — 2023 · Remote</p>
+              <h3>MicroMasters programme · Statistics and Data Science</h3>
+              <span>MITx</span>
+            </article>
+            <article>
+              <p>2010 — 2016 · Peru</p>
+              <h3>BSc Mechatronic Engineering</h3>
+              <span>National University of Engineering</span>
+            </article>
+          </div>
+          <a class="button button--secondary" href={site.cv}>
+            Download full CV
+            <ArrowIcon direction="up-right" />
+          </a>
+        </div>
+        <figure class="education__photo">
+          <Image
+            src={graduationImage}
+            alt="Kenji Hilasaca in graduation robes outside the University of Leeds Great Hall"
+            widths={[440, 720, 960]}
+            sizes="(max-width: 800px) 100vw, 35vw"
+            format="webp"
+          />
+          <figcaption>
+            MSc Data Science & Analytics with Distinction, University of Leeds,
+            2025.
+          </figcaption>
+        </figure>
       </div>
-      <a class="button button--secondary" href={site.cv}>
-        Download full CV
-        <ArrowIcon direction="up-right" />
-      </a>
     </div>
   </section>
 </BaseLayout>
@@ -217,36 +214,11 @@ import { capabilities, experience, site } from "../data/site";
     color: var(--muted);
   }
 
-  .capabilities {
-    border-top: 1px solid rgb(248 243 234 / 24%);
-  }
-
-  .capabilities article {
+  .education__grid {
     display: grid;
-    grid-template-columns: 0.18fr 0.5fr 1fr 0.7fr;
-    padding-block: var(--space-5);
-    border-bottom: 1px solid rgb(248 243 234 / 24%);
-    gap: var(--space-5);
-    align-items: baseline;
-  }
-
-  .capabilities article > span {
-    color: var(--mint);
-    font-size: var(--step--1);
-  }
-
-  .capabilities h3 {
-    font-size: var(--step-2);
-  }
-
-  .capabilities p {
-    margin: 0;
-    color: rgb(248 243 234 / 72%);
-  }
-
-  .capabilities small {
-    color: var(--mint);
-    font-size: var(--step--1);
+    grid-template-columns: 1.35fr 0.65fr;
+    gap: var(--space-8);
+    align-items: start;
   }
 
   .education__list {
@@ -274,6 +246,20 @@ import { capabilities, experience, site } from "../data/site";
     font-size: var(--step-2);
   }
 
+  .education__photo :global(img) {
+    width: 100%;
+    height: 34rem;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 50% 38%;
+  }
+
+  .education__photo figcaption {
+    margin-top: var(--space-3);
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
   @media (max-width: 62rem) {
     .timeline__item {
       grid-template-columns: 0.3fr 1fr;
@@ -283,17 +269,21 @@ import { capabilities, experience, site } from "../data/site";
       grid-column: 2;
     }
 
-    .capabilities article {
-      grid-template-columns: 0.18fr 0.7fr 1fr;
-    }
-
-    .capabilities small {
-      grid-column: 2 / -1;
-    }
-
     .education__list article {
       grid-template-columns: 1fr;
       gap: var(--space-2);
+    }
+
+    .education__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .education__photo {
+      max-width: 34rem;
+    }
+
+    .education__photo :global(img) {
+      height: min(120vw, 34rem);
     }
   }
 
@@ -322,15 +312,6 @@ import { capabilities, experience, site } from "../data/site";
       padding: var(--space-5) 0;
       border-right: 0;
       border-bottom: 1px solid var(--line);
-    }
-
-    .capabilities article {
-      grid-template-columns: 1fr;
-      gap: var(--space-3);
-    }
-
-    .capabilities small {
-      grid-column: auto;
     }
   }
 </style>
