@@ -37,7 +37,7 @@ export const projects: Project[] = [
     tags: ["Python", "Transformers", "GPU / HPC", "Data pipelines"],
     github: "https://github.com/kenjihilasak/Align-and-Shine",
     paper:
-      "https://lrec-conf.org/proceedings/lrec2026/workshops/bucc/2026.bucc-1.0.pdf#page=72",
+      "http://lrec-conf.org/proceedings/lrec2026/workshops/bucc/2026.bucc-1.0.pdf#page=72",
     preprint: "https://arxiv.org/abs/2605.09476",
     slug: "align-and-shine",
     featured: true,
