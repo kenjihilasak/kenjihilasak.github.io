@@ -7,8 +7,8 @@
   <path d="M1040 315h160M1120 0v630" stroke="#f8f3ea" stroke-opacity=".25"/>
   <text x="104" y="120" font-family="Arial, sans-serif" font-size="24" font-weight="700" letter-spacing="4" fill="#145f58">DATA &amp; AI ENGINEER · LEEDS, UK</text>
   <text x="96" y="284" font-family="Georgia, serif" font-size="86" fill="#111513">Kenji Hilasaca</text>
-  <text x="100" y="372" font-family="Georgia, serif" font-size="48" fill="#111513">Data systems that move from</text>
-  <text x="100" y="432" font-family="Georgia, serif" font-size="48" font-style="italic" fill="#145f58">research to production.</text>
+  <text x="100" y="372" font-family="Georgia, serif" font-size="48" fill="#111513">Reliable data and AI for</text>
+  <text x="100" y="432" font-family="Georgia, serif" font-size="48" font-style="italic" fill="#145f58">real-world decisions.</text>
   <line x1="100" y1="515" x2="920" y2="515" stroke="#111513" stroke-opacity=".25"/>
   <text x="100" y="560" font-family="Arial, sans-serif" font-size="22" fill="#58605c">Data engineering · Applied ML · Multilingual NLP</text>
 </svg>

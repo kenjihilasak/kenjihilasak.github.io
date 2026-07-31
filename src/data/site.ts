@@ -19,6 +19,8 @@ export type Project = {
   tags: string[];
   github: string;
   paper?: string;
+  preprint?: string;
+  report?: string;
   demo?: string;
   slug: string;
   featured: boolean;
@@ -27,32 +29,35 @@ export type Project = {
 export const projects: Project[] = [
   {
     title: "Align and Shine",
-    eyebrow: "Multilingual NLP · Research",
+    eyebrow: "Data engineering · Multilingual NLP",
     description:
-      "A reproducible pipeline for extracting sentence-aligned corpora for text simplification across Catalan, English, French, Italian and Spanish.",
+      "A traceable pipeline that transforms noisy multilingual source data into aligned corpora across Catalan, English, French, Italian and Spanish.",
     outcome:
-      "Built the data infrastructure behind a peer-reviewed LREC-BUCC 2026 paper and reduced a core processing workflow from 48 to 6 hours.",
+      "Cut a core workflow from 48 to 6 hours and released the resulting corpus as an open, reproducible data product.",
     tags: ["Python", "Transformers", "GPU / HPC", "Data pipelines"],
     github: "https://github.com/kenjihilasak/Align-and-Shine",
-    paper: "https://arxiv.org/abs/2605.09476",
+    paper:
+      "https://lrec-conf.org/proceedings/lrec2026/workshops/bucc/2026.bucc-1.0.pdf#page=72",
+    preprint: "https://arxiv.org/abs/2605.09476",
     slug: "align-and-shine",
     featured: true,
   },
   {
     title: "Exchange-rate forecasting",
-    eyebrow: "Time series · MSc dissertation",
+    eyebrow: "Forecasting · Decision science",
     description:
-      "A rigorous out-of-sample study comparing statistical, structural and machine-learning approaches to exchange-rate forecasting.",
+      "A simulation-based, out-of-sample comparison of statistical, structural and machine-learning approaches to foreign-exchange forecasting.",
     outcome:
-      "Used rolling evaluation and Monte Carlo analysis to test whether added model complexity translates into reliable forecast improvements.",
+      "Found that random walks remained difficult to beat at short horizons, while structural hybrids improved longer-horizon forecasts for selected currency pairs.",
     tags: ["Python", "ARIMA", "GARCH", "Monte Carlo"],
     github: "https://github.com/kenjihilasak/exchange-rate-forecasting",
+    report: "/kenji-hilasaca-msc-dissertation-2025.pdf",
     slug: "exchange-rate-forecasting",
     featured: true,
   },
   {
     title: "Late refill risk modelling",
-    eyebrow: "Applied ML · Healthcare",
+    eyebrow: "Applied ML · Model risk",
     description:
       "A leakage-aware temporal modelling pipeline for prescription refill risk, with calibration and explicit analysis of dataset shift.",
     outcome:
@@ -64,7 +69,7 @@ export const projects: Project[] = [
   },
   {
     title: "Agentic support intelligence",
-    eyebrow: "Generative AI · Prototype",
+    eyebrow: "Applied AI · System design",
     description:
       "An experimental retrieval system combining order histories, policy documents and task-specific tools for support questions.",
     outcome:
@@ -82,15 +87,15 @@ export const experience = [
     role: "Research Assistant · NLP & Data Science",
     organisation: "University of Leeds",
     summary:
-      "Build and optimise distributed NLP pipelines on enterprise Linux and NVIDIA GPU infrastructure for accessible language technology research. Co-authored work on multilingual text alignment and corpus extraction.",
-    tags: ["NLP", "GPU / HPC", "Data lineage", "Research"],
+      "Build and optimise distributed NLP pipelines on enterprise Linux and NVIDIA GPU infrastructure, cutting a core multilingual workflow from 48 to 6 hours and releasing an open five-language data product.",
+    tags: ["NLP", "GPU / HPC", "Data lineage", "Reproducibility"],
   },
   {
     period: "2024",
     role: "Data Engineer",
     organisation: "BBVA · Corporate & Investment Banking",
     summary:
-      "Built distributed data pipelines with PySpark, Hadoop and AWS Step Functions, and integrated XGBoost classification through REST APIs for corporate-banking use cases.",
+      "Built PySpark and Hadoop pipelines orchestrated with AWS Step Functions, cutting processing latency by 50%, and integrated XGBoost classification through REST APIs.",
     tags: ["PySpark", "Hadoop", "AWS", "APIs"],
   },
   {

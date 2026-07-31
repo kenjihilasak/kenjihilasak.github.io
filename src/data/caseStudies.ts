@@ -15,14 +15,14 @@ export type CaseStudy = {
 export const caseStudies: Record<string, CaseStudy> = {
   "align-and-shine": {
     slug: "align-and-shine",
-    status: "Published research · 2026",
+    status: "Multilingual data engineering · 2026",
     summary:
-      "An end-to-end multilingual NLP pipeline for constructing sentence-aligned text-simplification corpora across five languages.",
+      "A production-minded data pipeline for constructing aligned text-simplification corpora across five languages.",
     challenge:
       "High-quality simplification datasets are scarce outside English. The project needed to turn noisy, document-level comparable corpora into traceable sentence pairs suitable for training and evaluating language systems.",
-    role: "As a Research Assistant and paper co-author, I worked on the extraction and alignment infrastructure, large-scale processing and the reproducible release of the resulting corpora.",
+    role: "I designed and optimised extraction and alignment workflows for large-scale shared compute, keeping provenance, intermediate artefacts and reproducible releases visible.",
     result:
-      "The work produced an open multilingual dataset and a peer-reviewed paper presented at the BUCC workshop at LREC 2026.",
+      "Released an open five-language data product, reduced a core workflow from 48 to 6 hours and supported a peer-reviewed paper presented at BUCC, LREC 2026.",
     metrics: [
       { value: "5", label: "languages aligned" },
       { value: "48 → 6h", label: "core workflow runtime" },
@@ -46,7 +46,7 @@ export const caseStudies: Record<string, CaseStudy> = {
         text: "The repository brings together multilingual encoders and alignment methods, including BGE, LaBSE and SONAR-based workflows.",
       },
       {
-        title: "Engineer for research compute",
+        title: "Engineer for shared compute",
         text: "Batch execution, compression and SLURM-oriented processing made it possible to run the workflow efficiently on shared Linux and GPU infrastructure.",
       },
     ],
@@ -56,22 +56,22 @@ export const caseStudies: Record<string, CaseStudy> = {
       "Documented the work in an open repository with separate code and data licensing.",
     ],
     reflection:
-      "The next engineering step is to add a root-level quickstart, automated tests and CI around a small fixture corpus so that contributors can validate the full pipeline without access to the research cluster.",
+      "The next engineering step is to add a root-level quickstart, automated tests and CI around a small fixture corpus so contributors can validate the full pipeline without access to the shared compute environment.",
   },
   "exchange-rate-forecasting": {
     slug: "exchange-rate-forecasting",
-    status: "MSc dissertation · 2025",
+    status: "Financial forecasting · MSc project, 2025",
     summary:
       "An out-of-sample comparison of random-walk, ARIMA, GARCH and structural exchange-rate models across multiple forecast horizons.",
     challenge:
       "Exchange rates are noisy, regime-sensitive and notoriously difficult to forecast. The central question was not which model best fits history, but whether added complexity produces reliable gains beyond a random-walk benchmark.",
     role: "I designed the empirical framework, implemented the models and simulations, and compared performance across three currency pairs and several forecast horizons.",
     result:
-      "The project made model comparison explicit and showed why evaluation design matters as much as model choice in financial forecasting.",
+      "Random walks remained difficult to beat at one month. At longer horizons, structural hybrid models improved forecasts for EUR/USD and PEN/USD, while ZAR/USD produced no reliable signal.",
     metrics: [
       { value: "3", label: "currency pairs" },
-      { value: "4+", label: "model families" },
-      { value: "Multi-step", label: "forecast horizons" },
+      { value: "1,000", label: "simulated paths per model" },
+      { value: "4", label: "forecast horizons" },
     ],
     pipeline: [
       "Market data",
@@ -96,9 +96,9 @@ export const caseStudies: Record<string, CaseStudy> = {
       },
     ],
     findings: [
-      "Compared statistical and economically motivated models on a common evaluation frame.",
-      "Investigated how relative performance changes by currency pair and forecast horizon.",
-      "Prioritised forecast evidence over in-sample fit.",
+      "At the one-month horizon, the random-walk benchmark was best or statistically tied across all three pairs.",
+      "Structural models with dynamic errors improved longer-horizon forecasts for EUR/USD and PEN/USD in the submitted evaluation.",
+      "ZAR/USD remained consistent with a random walk across the tested horizons, showing why conclusions must remain pair-specific.",
     ],
     reflection:
       "Before treating the repository as production-ready, I would package the code, remove generated artefacts and enforce rolling-origin validation with a final untouched test window. That improvement is now part of the repository roadmap.",

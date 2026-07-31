@@ -5,7 +5,33 @@ import ProjectCard from "../components/ProjectCard.astro";
 import SectionHeading from "../components/SectionHeading.astro";
 import { capabilities, experience, projects, site } from "../data/site";
 
-const featuredProjects = projects.filter((project) => project.featured);
+const featuredOrder = [
+  "align-and-shine",
+  "late-refill-risk",
+  "exchange-rate-forecasting",
+];
+const featuredProjects = projects
+  .filter((project) => project.featured)
+  .sort(
+    (first, second) =>
+      featuredOrder.indexOf(first.slug) - featuredOrder.indexOf(second.slug),
+  );
+const experienceOrder = ["BBVA", "INDRA", "University of Leeds"];
+const experiencePreview = experience
+  .filter((item) =>
+    experienceOrder.some((organisation) =>
+      item.organisation.startsWith(organisation),
+    ),
+  )
+  .sort(
+    (first, second) =>
+      experienceOrder.findIndex((organisation) =>
+        first.organisation.startsWith(organisation),
+      ) -
+      experienceOrder.findIndex((organisation) =>
+        second.organisation.startsWith(organisation),
+      ),
+  );
 ---
 
 <BaseLayout>
@@ -14,13 +40,15 @@ const featuredProjects = projects.filter((project) => project.featured);
       <div class="hero__intro">
         <p class="eyebrow">Data & AI Engineer · Leeds, UK</p>
         <h1>
-          I build data systems that move from <em>research</em> to production.
+          I build reliable data and AI systems for <em>real-world decisions.</em
+          >
         </h1>
       </div>
       <div class="hero__aside">
         <p class="lede">
-          Reliable data pipelines, production-focused machine learning and
-          multilingual NLP—built to solve real problems.
+          Data pipelines, machine-learning workflows and applied AI—designed
+          around measurable outcomes, reproducibility and production
+          constraints.
         </p>
         <div class="hero__actions">
           <a class="button" href="#selected-work">
@@ -36,8 +64,9 @@ const featuredProjects = projects.filter((project) => project.featured);
       <div class="hero__status">
         <span class="status-dot" aria-hidden="true"></span>
         <p>
-          Research Assistant at the University of Leeds. Open to Data
-          Engineering, ML Engineering and applied AI opportunities.
+          Based in Leeds, with 6+ years across banking, consulting, software and
+          applied NLP. Open to Data Engineering, ML Engineering and applied AI
+          roles.
         </p>
       </div>
       <div class="hero__signal" aria-hidden="true">
@@ -57,15 +86,15 @@ const featuredProjects = projects.filter((project) => project.featured);
     <div class="container proof__grid">
       <div>
         <strong>6+</strong>
-        <span>years across data, software and research</span>
+        <span>years delivering data and software systems</span>
+      </div>
+      <div>
+        <strong>50%</strong>
+        <span>lower processing latency in corporate banking</span>
       </div>
       <div>
         <strong>48 → 6h</strong>
-        <span>core NLP workflow runtime</span>
-      </div>
-      <div>
-        <strong>5</strong>
-        <span>languages in a simplification corpus</span>
+        <span>core data-workflow runtime</span>
       </div>
       <div>
         <strong>Distinction</strong>
@@ -121,12 +150,12 @@ const featuredProjects = projects.filter((project) => project.featured);
     <div class="container">
       <SectionHeading
         eyebrow="Experience"
-        title="Engineering shaped by different environments."
-        intro="Academic research, financial services, consulting and entrepreneurship—connected by a focus on useful, dependable systems."
+        title="Experience where data has to work."
+        intro="Banking, consulting, software and applied AI—connected by a focus on dependable systems and useful decisions."
       />
       <div class="experience-preview__grid">
         {
-          experience.slice(0, 3).map((item) => (
+          experiencePreview.map((item) => (
             <article>
               <p class="experience-preview__period">{item.period}</p>
               <h3>{item.role}</h3>
@@ -143,36 +172,6 @@ const featuredProjects = projects.filter((project) => project.featured);
     </div>
   </section>
 
-  <section class="section research-feature">
-    <div class="container research-feature__grid">
-      <div>
-        <p class="eyebrow">Featured research · 2026</p>
-        <h2>Align and Shine</h2>
-      </div>
-      <div class="research-feature__copy">
-        <p class="lede">
-          Building high-quality sentence-aligned corpora for multilingual text
-          simplification.
-        </p>
-        <p>
-          Co-authored with Nouran Khallaf and Serge Sharoff and presented at the
-          BUCC workshop at LREC 2026. The work releases aligned data across five
-          languages to support more accessible language technologies.
-        </p>
-        <div class="link-row">
-          <a href="https://arxiv.org/abs/2605.09476">
-            Read the paper
-            <ArrowIcon direction="up-right" />
-          </a>
-          <a href="https://github.com/kenjihilasak/Align-and-Shine">
-            Explore the code
-            <ArrowIcon direction="up-right" />
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="section section--white about-preview">
     <div class="container about-preview__grid">
       <div class="about-preview__label">
@@ -180,11 +179,10 @@ const featuredProjects = projects.filter((project) => project.featured);
         <span aria-hidden="true">PE → BR → UK</span>
       </div>
       <div>
-        <h2>A path through engineering, entrepreneurship and research.</h2>
+        <h2>A path through engineering, entrepreneurship and data.</h2>
         <p class="lede">
-          My route into data began with mechatronics in Peru, continued through
-          robotics and a technology company, and now centres on data and AI
-          systems in Leeds.
+          From mechatronics and product-building in Peru to financial data
+          systems and applied AI in Leeds.
         </p>
         <a class="text-link" href="/about/">
           Read my story
@@ -425,42 +423,6 @@ const featuredProjects = projects.filter((project) => project.featured);
     color: var(--mint);
   }
 
-  .research-feature__grid {
-    display: grid;
-    grid-template-columns: 0.75fr 1.25fr;
-    gap: var(--space-8);
-    align-items: start;
-  }
-
-  .research-feature h2 {
-    margin-top: var(--space-4);
-    color: var(--teal);
-  }
-
-  .research-feature__copy {
-    max-width: 46rem;
-    padding-top: var(--space-6);
-  }
-
-  .research-feature__copy > p:not(.lede) {
-    color: var(--muted);
-  }
-
-  .link-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-5);
-    margin-top: var(--space-5);
-  }
-
-  .link-row a {
-    display: inline-flex;
-    gap: 0.4rem;
-    align-items: center;
-    font-weight: 600;
-    text-decoration: none;
-  }
-
   .about-preview__grid {
     display: grid;
     grid-template-columns: 0.38fr 1fr;
@@ -543,7 +505,6 @@ const featuredProjects = projects.filter((project) => project.featured);
       min-height: auto;
     }
 
-    .research-feature__grid,
     .about-preview__grid {
       grid-template-columns: 1fr;
       gap: var(--space-5);

@@ -4,6 +4,8 @@ import ArrowIcon from "../../components/ArrowIcon.astro";
 import SectionHeading from "../../components/SectionHeading.astro";
 import { projects } from "../../data/site";
 import { caseStudies } from "../../data/caseStudies";
+import lrecImage from "../../assets/lrec-2026.jpg";
+import { Image } from "astro:assets";
 
 export function getStaticPaths() {
   return projects.map((project) => ({
@@ -13,12 +15,42 @@ export function getStaticPaths() {
 }
 
 const { project, study } = Astro.props;
+const isAlignAndShine = project.slug === "align-and-shine";
+const publicationSchema = isAlignAndShine
+  ? {
+      "@context": "https://schema.org",
+      "@type": "ScholarlyArticle",
+      headline:
+        "Align and Shine: Building High-Quality Sentence-Aligned Corpora for Multilingual Text Simplification",
+      author: [
+        { "@type": "Person", name: "Kenji Hilasaca" },
+        { "@type": "Person", name: "Nouran Khallaf" },
+        { "@type": "Person", name: "Serge Sharoff" },
+      ],
+      datePublished: "2026",
+      url: project.paper,
+      sameAs: project.preprint,
+      isPartOf: {
+        "@type": "PublicationVolume",
+        name: "Proceedings of the 19th Workshop on Building and Using Comparable Corpora (BUCC) at LREC 2026",
+      },
+    }
+  : null;
 ---
 
 <BaseLayout
   title={`${project.title} — Kenji Hilasaca`}
   description={study.summary}
 >
+  {
+    publicationSchema && (
+      <script
+        type="application/ld+json"
+        is:inline
+        set:html={JSON.stringify(publicationSchema)}
+      />
+    )
+  }
   <header class="case-hero">
     <div class="container">
       <a class="back-link" href="/work/">
@@ -54,6 +86,24 @@ const { project, study } = Astro.props;
       </article>
     </div>
   </section>
+
+  {
+    isAlignAndShine && (
+      <figure class="case-photo container">
+        <Image
+          src={lrecImage}
+          alt="Kenji Hilasaca standing beside the LREC 2026 welcome display in Palma"
+          widths={[640, 960, 1024]}
+          sizes="(max-width: 1120px) 100vw, 1120px"
+          format="webp"
+        />
+        <figcaption>
+          LREC 2026 in Palma, where Align and Shine was presented at the BUCC
+          workshop.
+        </figcaption>
+      </figure>
+    )
+  }
 
   <section class="section section--teal metrics">
     <div class="container">
@@ -128,6 +178,43 @@ const { project, study } = Astro.props;
     </div>
   </section>
 
+  {
+    isAlignAndShine && (
+      <section class="section publication">
+        <div class="container publication__grid">
+          <div>
+            <p class="eyebrow">Publication and release</p>
+            <span aria-hidden="true">LREC ’26</span>
+          </div>
+          <article>
+            <h2>
+              Align and Shine: Building High-Quality Sentence-Aligned Corpora
+              for Multilingual Text Simplification
+            </h2>
+            <p class="publication__authors">
+              Kenji Hilasaca · Nouran Khallaf · Serge Sharoff
+            </p>
+            <p>
+              Peer-reviewed paper in the official proceedings of the 19th BUCC
+              workshop at LREC 2026. The paper begins on PDF page 72 of the
+              workshop volume.
+            </p>
+            <div class="publication__links">
+              <a class="button" href={project.paper}>
+                Official proceedings
+                <ArrowIcon direction="up-right" />
+              </a>
+              <a class="button button--secondary" href={project.preprint}>
+                arXiv preprint
+                <ArrowIcon direction="up-right" />
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+    )
+  }
+
   <section class="section reflection">
     <div class="narrow">
       <p class="eyebrow">Engineering reflection</p>
@@ -138,17 +225,17 @@ const { project, study } = Astro.props;
           <ArrowIcon direction="up-right" />
         </a>
         {
-          project.paper && (
-            <a class="button button--secondary" href={project.paper}>
-              Read the paper
+          project.demo && (
+            <a class="button button--secondary" href={project.demo}>
+              Open demo
               <ArrowIcon direction="up-right" />
             </a>
           )
         }
         {
-          project.demo && (
-            <a class="button button--secondary" href={project.demo}>
-              Open demo
+          project.report && (
+            <a class="button button--secondary" href={project.report}>
+              Read MSc dissertation
               <ArrowIcon direction="up-right" />
             </a>
           )
@@ -220,6 +307,22 @@ const { project, study } = Astro.props;
   .case-overview article > p:last-child {
     margin: var(--space-5) 0 0;
     color: var(--muted);
+  }
+
+  .case-photo {
+    margin-block: var(--space-7);
+  }
+
+  .case-photo :global(img) {
+    width: 100%;
+    aspect-ratio: 512 / 321;
+    object-fit: cover;
+  }
+
+  .case-photo figcaption {
+    margin-top: var(--space-3);
+    color: var(--muted);
+    font-size: var(--step--1);
   }
 
   .metrics .eyebrow {
@@ -360,6 +463,44 @@ const { project, study } = Astro.props;
     font-size: 0.65rem;
   }
 
+  .publication__grid {
+    display: grid;
+    grid-template-columns: 0.38fr 1fr;
+    gap: var(--space-8);
+  }
+
+  .publication__grid > div > span {
+    display: block;
+    margin-top: var(--space-6);
+    color: var(--brick);
+    font-family: var(--font-serif);
+    font-size: var(--step-5);
+    line-height: 1;
+  }
+
+  .publication h2 {
+    max-width: 24ch;
+    font-size: var(--step-3);
+  }
+
+  .publication__authors {
+    color: var(--teal);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+
+  .publication article > p:not(.publication__authors) {
+    max-width: 44rem;
+    color: var(--muted);
+  }
+
+  .publication__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+
   .reflection blockquote {
     margin: var(--space-5) 0 0;
     padding: 0;
@@ -374,13 +515,15 @@ const { project, study } = Astro.props;
   .case-links {
     display: flex;
     flex-wrap: wrap;
+    flex-wrap: wrap;
     gap: var(--space-3);
     margin-top: var(--space-6);
   }
 
   @media (max-width: 64rem) {
     .case-hero__grid,
-    .findings__grid {
+    .findings__grid,
+    .publication__grid {
       grid-template-columns: 1fr;
     }
 
