@@ -28,6 +28,19 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    title: "University finance AI assistant",
+    eyebrow: "Azure RAG · Evaluated retrieval",
+    description:
+      "A grounded question-answering system over public financial reports, with hybrid retrieval, page-level citations and explicit abstention.",
+    outcome:
+      "Reached 100% Recall@5 on a reviewed retrieval set and correctly abstained on all ten out-of-scope evaluation questions.",
+    tags: ["Python", "Azure AI Search", "Microsoft Foundry", "RAG evaluation"],
+    github: "https://github.com/kenjihilasak/uol-finance-ai-assistant",
+    demo: "/work/uol-finance-ai-assistant/#assistant-demo",
+    slug: "uol-finance-ai-assistant",
+    featured: true,
+  },
+  {
     title: "Align and Shine",
     eyebrow: "Data engineering · Multilingual NLP",
     description:

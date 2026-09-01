@@ -1,0 +1,485 @@
+---
+const apiBase = (import.meta.env.PUBLIC_UOL_FINANCE_API_URL ?? "").replace(
+  /\/$/,
+  "",
+);
+const fallbackDocument = {
+  document_id:
+    "annual-report-and-financial-statements-for-year-ending-31-july-2025-e387d079c84a",
+  title: "Annual Report and financial statements for year ending 31 July 2025",
+  institution: "University of Leeds",
+  document_date: "2025-07-31",
+  source_url:
+    "https://www.leeds.ac.uk/download/downloads/id/3533/annual-report-and-accounts-2024-25.pdf",
+  status: "current",
+  suggested_questions: [
+    "What was the University's total income in 2024/25?",
+    "How much cash and current investments did the University hold?",
+    "What were the main financial sustainability risks?",
+    "What credit rating did Moody's affirm?",
+  ],
+};
+---
+
+<section
+  class="section assistant-demo"
+  id="assistant-demo"
+  data-api-base={apiBase}
+  data-fallback-document={JSON.stringify(fallbackDocument)}
+>
+  <div class="container assistant-demo__grid">
+    <div class="assistant-demo__context">
+      <p class="eyebrow">Interactive evidence</p>
+      <h2>Ask the annual report.</h2>
+      <p>
+        Answers are restricted to the selected public document. Supported
+        answers include page-level citations; unsupported questions should be
+        declined.
+      </p>
+
+      <div class="document-card">
+        <label for="finance-document">Document used by the RAG system</label>
+        <select id="finance-document" name="document"></select>
+        <p id="finance-document-meta"></p>
+        <a
+          id="finance-document-link"
+          class="text-link"
+          href={fallbackDocument.source_url}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Open source PDF <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+
+      <div>
+        <p class="assistant-demo__label">Suggested questions</p>
+        <div id="finance-suggestions" class="suggestions"></div>
+      </div>
+    </div>
+
+    <div class="chat-panel">
+      <div
+        id="finance-messages"
+        class="chat-messages"
+        aria-live="polite"
+        aria-label="Conversation"
+      >
+        <article class="message message--assistant">
+          <span>Assistant</span>
+          <p>Select a suggested question or ask about the financial report.</p>
+        </article>
+      </div>
+
+      <form id="finance-chat-form" class="chat-form">
+        <label for="finance-question">Question</label>
+        <textarea
+          id="finance-question"
+          name="question"
+          rows="3"
+          maxlength="500"
+          required
+          placeholder="Ask about income, expenditure, cash or financial risks…"
+        ></textarea>
+        <div class="chat-form__footer">
+          <small id="finance-status">
+            {apiBase ? "Live Azure-backed demo" : "Live API not deployed yet"}
+          </small>
+          <button class="button" type="submit">Ask the report</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  type PublicDocument = {
+    document_id: string;
+    title: string;
+    institution: string;
+    document_date: string;
+    source_url: string;
+    status: string;
+    suggested_questions: string[];
+  };
+
+  type Citation = {
+    source_id: string;
+    chunk_id: string;
+    title: string;
+    page_number: number;
+    source_url: string;
+    page_url: string;
+    excerpt: string;
+  };
+
+  type Answer = {
+    status: "answered" | "abstained";
+    answer: string;
+    citations: Citation[];
+  };
+
+  const root = document.querySelector<HTMLElement>(".assistant-demo");
+  if (root) {
+    const apiBase = root.dataset.apiBase ?? "";
+    const fallback = JSON.parse(
+      root.dataset.fallbackDocument ?? "{}",
+    ) as PublicDocument;
+    const select = root.querySelector<HTMLSelectElement>("#finance-document")!;
+    const metadata = root.querySelector<HTMLElement>("#finance-document-meta")!;
+    const documentLink = root.querySelector<HTMLAnchorElement>(
+      "#finance-document-link",
+    )!;
+    const suggestions = root.querySelector<HTMLElement>(
+      "#finance-suggestions",
+    )!;
+    const messages = root.querySelector<HTMLElement>("#finance-messages")!;
+    const form = root.querySelector<HTMLFormElement>("#finance-chat-form")!;
+    const question =
+      root.querySelector<HTMLTextAreaElement>("#finance-question")!;
+    const status = root.querySelector<HTMLElement>("#finance-status")!;
+    const submit = form.querySelector<HTMLButtonElement>(
+      "button[type='submit']",
+    )!;
+    let documents: PublicDocument[] = [fallback];
+
+    const selectedDocument = () =>
+      documents.find((item) => item.document_id === select.value) ??
+      documents[0];
+
+    const makeMessage = (role: "user" | "assistant", text: string) => {
+      const article = document.createElement("article");
+      article.className = `message message--${role}`;
+      const label = document.createElement("span");
+      label.textContent = role === "user" ? "You" : "Assistant";
+      const paragraph = document.createElement("p");
+      paragraph.textContent = text;
+      article.append(label, paragraph);
+      messages.append(article);
+      messages.scrollTop = messages.scrollHeight;
+      return article;
+    };
+
+    const renderCitations = (container: HTMLElement, citations: Citation[]) => {
+      if (!citations.length) return;
+      const list = document.createElement("ol");
+      list.className = "citation-list";
+      for (const citation of citations) {
+        const item = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = citation.page_url;
+        link.target = "_blank";
+        link.rel = "noreferrer";
+        link.textContent = `${citation.title} — page ${citation.page_number}`;
+        const excerpt = document.createElement("p");
+        excerpt.textContent = citation.excerpt;
+        item.append(link, excerpt);
+        list.append(item);
+      }
+      container.append(list);
+    };
+
+    const renderDocument = () => {
+      const current = selectedDocument();
+      metadata.textContent = `${current.institution} · ${current.document_date}`;
+      documentLink.href = current.source_url;
+      suggestions.replaceChildren();
+      for (const suggestion of current.suggested_questions) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = suggestion;
+        button.addEventListener("click", () => {
+          question.value = suggestion;
+          question.focus();
+        });
+        suggestions.append(button);
+      }
+    };
+
+    const renderDocuments = () => {
+      select.replaceChildren();
+      for (const item of documents) {
+        const option = document.createElement("option");
+        option.value = item.document_id;
+        option.textContent = item.title;
+        select.append(option);
+      }
+      renderDocument();
+    };
+
+    select.addEventListener("change", renderDocument);
+    renderDocuments();
+
+    if (apiBase) {
+      fetch(`${apiBase}/v1/documents`)
+        .then((response) => {
+          if (!response.ok) throw new Error("Document catalog unavailable");
+          return response.json() as Promise<PublicDocument[]>;
+        })
+        .then((items) => {
+          if (items.length) {
+            documents = items;
+            renderDocuments();
+          }
+        })
+        .catch(() => {
+          status.textContent = "Using the built-in document catalog";
+        });
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const value = question.value.trim();
+      if (!value) return;
+      makeMessage("user", value);
+      question.value = "";
+
+      if (!apiBase) {
+        makeMessage(
+          "assistant",
+          "The live API is not deployed yet. You can still inspect the source PDF and evaluated project evidence.",
+        );
+        return;
+      }
+
+      submit.disabled = true;
+      status.textContent = "Retrieving evidence and generating an answer…";
+      try {
+        const response = await fetch(`${apiBase}/v1/answer`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            question: value,
+            document_id: selectedDocument().document_id,
+          }),
+        });
+        const payload = await response.json();
+        if (!response.ok) {
+          throw new Error(payload.detail ?? "The assistant is unavailable");
+        }
+        const answer = payload as Answer;
+        const article = makeMessage("assistant", answer.answer);
+        if (answer.status === "abstained") {
+          article.classList.add("message--abstained");
+        }
+        renderCitations(article, answer.citations);
+        status.textContent =
+          answer.status === "answered"
+            ? "Answered from cited evidence"
+            : "Abstained: insufficient evidence";
+      } catch (error) {
+        makeMessage(
+          "assistant",
+          error instanceof Error
+            ? error.message
+            : "The assistant is temporarily unavailable.",
+        );
+        status.textContent = "Request failed";
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  }
+</script>
+
+<style>
+  .assistant-demo {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .assistant-demo__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: var(--space-7);
+  }
+
+  .assistant-demo h2 {
+    max-width: 12ch;
+    margin-bottom: var(--space-4);
+    color: var(--paper);
+    font-size: var(--step-4);
+  }
+
+  .assistant-demo__context > p:not(.eyebrow) {
+    max-width: 40rem;
+    color: rgb(246 241 231 / 72%);
+  }
+
+  .document-card {
+    margin-block: var(--space-6);
+    padding: var(--space-4);
+    border: 1px solid rgb(246 241 231 / 22%);
+  }
+
+  .document-card label,
+  .assistant-demo__label,
+  .chat-form label {
+    display: block;
+    margin-bottom: var(--space-2);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+
+  .document-card select,
+  .chat-form textarea {
+    width: 100%;
+    border: 1px solid rgb(246 241 231 / 32%);
+    border-radius: 0;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+  }
+
+  .document-card select {
+    padding: 0.75rem;
+  }
+
+  .document-card p {
+    margin-block: var(--space-3) 0;
+    color: rgb(246 241 231 / 65%);
+    font-size: var(--step--1);
+  }
+
+  .document-card .text-link {
+    margin-top: var(--space-3);
+    color: var(--paper);
+  }
+
+  .suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .suggestions button {
+    padding: 0.55rem 0.75rem;
+    border: 1px solid rgb(246 241 231 / 30%);
+    background: transparent;
+    color: var(--paper);
+    font: inherit;
+    font-size: var(--step--1);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .suggestions button:hover,
+  .suggestions button:focus-visible {
+    border-color: var(--paper);
+  }
+
+  .chat-panel {
+    display: grid;
+    grid-template-rows: minmax(22rem, 1fr) auto;
+    min-height: 38rem;
+    border: 1px solid rgb(246 241 231 / 22%);
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-height: 34rem;
+    padding: var(--space-5);
+    overflow-y: auto;
+  }
+
+  .message {
+    max-width: 88%;
+    padding: var(--space-4);
+    border: 1px solid var(--line);
+    background: #fff;
+  }
+
+  .message--user {
+    align-self: flex-end;
+    border-color: var(--teal);
+    background: color-mix(in srgb, var(--teal) 8%, white);
+  }
+
+  .message--abstained {
+    border-left: 0.3rem solid var(--brick);
+  }
+
+  .message > span {
+    display: block;
+    margin-bottom: var(--space-2);
+    color: var(--teal);
+    font-size: var(--step--1);
+    font-weight: 700;
+  }
+
+  .message p {
+    margin: 0;
+  }
+
+  .citation-list {
+    display: grid;
+    gap: var(--space-3);
+    margin: var(--space-4) 0 0;
+    padding: var(--space-4) 0 0 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .citation-list a {
+    color: var(--teal);
+    font-weight: 600;
+  }
+
+  .citation-list p {
+    display: -webkit-box;
+    margin-top: var(--space-2);
+    overflow: hidden;
+    color: var(--muted);
+    font-size: var(--step--1);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .chat-form {
+    padding: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+
+  .chat-form textarea {
+    min-height: 6rem;
+    padding: var(--space-3);
+    resize: vertical;
+  }
+
+  .chat-form__footer {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    align-items: center;
+    margin-top: var(--space-3);
+  }
+
+  .chat-form small {
+    color: var(--muted);
+  }
+
+  .chat-form button:disabled {
+    cursor: wait;
+    opacity: 0.55;
+  }
+
+  @media (max-width: 58rem) {
+    .assistant-demo__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 36rem) {
+    .chat-form__footer {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .message {
+      max-width: 100%;
+    }
+  }
+</style>

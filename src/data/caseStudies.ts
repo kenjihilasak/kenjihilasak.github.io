@@ -13,6 +13,51 @@ export type CaseStudy = {
 };
 
 export const caseStudies: Record<string, CaseStudy> = {
+  "uol-finance-ai-assistant": {
+    slug: "uol-finance-ai-assistant",
+    status: "Azure RAG engineering · 2026",
+    summary:
+      "An evidence-led assistant for exploring public university financial reports, built around measurable retrieval, page-level provenance and safe abstention.",
+    challenge:
+      "Financial reports combine narrative, tables, changing periods and similar figures. The system must retrieve the right evidence, preserve scope and units, cite the original PDF and decline questions the indexed documents cannot answer.",
+    role: "I designed the staged ingestion and evaluation pipeline, implemented Azure hybrid search and grounded generation, and separated the public interface from credentials and model access.",
+    result:
+      "The reviewed ten-question baseline achieved 100% Recall@5 and 0.825 MRR@5. A separate ten-question negative set produced 100% correct, citation-free abstention.",
+    metrics: [
+      { value: "1.00", label: "hybrid Recall@5" },
+      { value: "0.825", label: "hybrid MRR@5" },
+      { value: "10/10", label: "correct abstentions" },
+    ],
+    pipeline: [
+      "Public PDF",
+      "Validated chunks",
+      "Azure embeddings",
+      "Hybrid retrieval",
+      "Grounded answer",
+      "Page citations",
+    ],
+    approach: [
+      {
+        title: "Evaluate retrieval before generation",
+        text: "Reviewed question sets measure Recall@k and MRR independently, so a plausible language-model answer cannot hide missing evidence.",
+      },
+      {
+        title: "Make provenance part of the contract",
+        text: "Every answer must cite retrieved chunk IDs that map back to a public source document and exact PDF page.",
+      },
+      {
+        title: "Test when the system should refuse",
+        text: "A separate negative dataset checks that unsupported questions produce an abstention without decorative or misleading citations.",
+      },
+    ],
+    findings: [
+      "Hybrid BM25 and vector retrieval found a relevant chunk in the top five for all ten reviewed questions.",
+      "The first negative-dataset draft exposed a labelling error: the supposedly missing Moody’s rating was present on page 83.",
+      "The public serving boundary keeps Azure credentials out of GitHub Pages and supports an immediate cost-control switch.",
+    ],
+    reflection:
+      "The current evaluation is intentionally small and development-reviewed. Before production use, I would add independent domain review, multi-document regression tests, persistent distributed rate limiting and operational monitoring.",
+  },
   "align-and-shine": {
     slug: "align-and-shine",
     status: "Multilingual data engineering · 2026",
