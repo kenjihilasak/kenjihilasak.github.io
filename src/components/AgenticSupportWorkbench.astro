@@ -1,0 +1,298 @@
+---
+const apiBase = (
+  import.meta.env.PUBLIC_AGENTIC_SUPPORT_API_URL ??
+  import.meta.env.PUBLIC_UOL_FINANCE_API_URL ??
+  ""
+).replace(/\/$/, "");
+const examples = [
+  "A visitor lost the original meal receipt. What evidence can we accept?",
+  "A student cannot submit coursework in Minerva and has not provided the module code.",
+  "A student needs to change their address because someone is stalking them.",
+];
+---
+
+<section class="section triage" id="live-workbench" data-api-base={apiBase}>
+  <div class="container">
+    <div class="triage__intro">
+      <div>
+        <p class="eyebrow">Staff enquiry workbench</p>
+        <h2>From unstructured enquiry to a safe next action.</h2>
+      </div>
+      <p>
+        Paste a synthetic enquiry. The system classifies it, applies
+        deterministic routing, and only retrieves evidence when generation is
+        allowed.
+      </p>
+    </div>
+    <div class="triage__layout">
+      <form id="triage-form" class="triage__input">
+        <label for="enquiry">Incoming enquiry</label>
+        <textarea
+          id="enquiry"
+          maxlength="4000"
+          rows="9"
+          required
+          placeholder="Paste a synthetic email or support enquiry…"></textarea>
+        <div class="triage__examples">
+          <span>Try an example</span>
+          {
+            examples.map((example, index) => (
+              <button type="button" data-example={example}>
+                0{index + 1}
+              </button>
+            ))
+          }
+        </div>
+        <p class="triage__privacy">
+          Demo data only. Do not enter names, contact details, health
+          information or real incidents.
+        </p>
+        <button class="button" type="submit">Triage enquiry</button>
+        <small id="triage-status"
+          >{
+            apiBase ? "Azure-backed API configured" : "API deployment pending"
+          }</small
+        >
+      </form>
+      <div id="triage-result" class="triage__result" aria-live="polite">
+        <div class="empty-state">
+          <span>Awaiting enquiry</span>
+          <p>
+            The structured classification, routing decision and cited draft will
+            appear here.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>(".triage");
+  if (root) {
+    const apiBase = root.dataset.apiBase ?? "";
+    const form = root.querySelector<HTMLFormElement>("#triage-form")!;
+    const input = root.querySelector<HTMLTextAreaElement>("#enquiry")!;
+    const result = root.querySelector<HTMLElement>("#triage-result")!;
+    const status = root.querySelector<HTMLElement>("#triage-status")!;
+    const submit = form.querySelector<HTMLButtonElement>(
+      "button[type=submit]",
+    )!;
+    root
+      .querySelectorAll<HTMLButtonElement>("[data-example]")
+      .forEach((button) => {
+        button.addEventListener("click", () => {
+          input.value = button.dataset.example ?? "";
+          input.focus();
+        });
+      });
+    const row = (label: string, value: string) => {
+      const div = document.createElement("div");
+      const dt = document.createElement("dt");
+      dt.textContent = label;
+      const dd = document.createElement("dd");
+      dd.textContent = value;
+      div.append(dt, dd);
+      return div;
+    };
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!apiBase) {
+        status.textContent =
+          "Deploy the Railway API to activate this workbench.";
+        return;
+      }
+      submit.disabled = true;
+      status.textContent = "Classifying and applying routing policy…";
+      try {
+        const response = await fetch(`${apiBase}/v1/triage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ enquiry: input.value.trim(), persist: false }),
+        });
+        const payload = await response.json();
+        if (!response.ok)
+          throw new Error(payload.detail ?? "Triage unavailable");
+        const classification = payload.decision.classification;
+        const title = document.createElement("h3");
+        title.textContent = classification.summary;
+        const badge = document.createElement("span");
+        badge.className = `decision decision--${payload.decision.action}`;
+        badge.textContent = payload.decision.action.replaceAll("_", " ");
+        const dl = document.createElement("dl");
+        dl.append(
+          row("Category", classification.category),
+          row("Subcategory", classification.subcategory),
+          row("Route", payload.decision.route_to.replaceAll("_", " ")),
+          row(
+            "Sensitive",
+            classification.is_sensitive || payload.decision.rule_flags.length
+              ? "Yes — generation blocked"
+              : "No",
+          ),
+          row(
+            "Missing information",
+            classification.missing_info.length
+              ? classification.missing_info.join(", ")
+              : "None",
+          ),
+        );
+        const reason = document.createElement("p");
+        reason.className = "decision-reason";
+        reason.textContent = payload.decision.reason;
+        result.replaceChildren(badge, title, dl, reason);
+        if (payload.draft_response) {
+          const draft = document.createElement("article");
+          const heading = document.createElement("h4");
+          heading.textContent = "Staff-reviewed draft";
+          const text = document.createElement("p");
+          text.textContent = payload.draft_response;
+          draft.append(heading, text);
+          if (payload.citations.length) {
+            const list = document.createElement("ul");
+            payload.citations.forEach((citation: any) => {
+              const li = document.createElement("li");
+              const link = document.createElement("a");
+              link.href = citation.page_url;
+              link.target = "_blank";
+              link.rel = "noreferrer";
+              link.textContent = `${citation.title} — source ${citation.page_number}`;
+              li.append(link);
+              list.append(li);
+            });
+            draft.append(list);
+          }
+          result.append(draft);
+        }
+        status.textContent = payload.decision.allow_generation
+          ? "Draft grounded in approved evidence"
+          : "Safely routed without answer generation";
+      } catch (error) {
+        status.textContent =
+          error instanceof Error ? error.message : "Request failed";
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  }
+</script>
+
+<style>
+  .triage {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .triage__intro {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: var(--space-7);
+    margin-bottom: var(--space-7);
+  }
+  .triage h2 {
+    color: var(--paper);
+    max-width: 18ch;
+    font-size: var(--step-4);
+  }
+  .triage__intro > p,
+  .triage__privacy,
+  #triage-status {
+    color: rgb(246 241 231 / 70%);
+  }
+  .triage__layout {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: var(--space-5);
+  }
+  .triage__input,
+  .triage__result {
+    padding: var(--space-5);
+    border: 1px solid rgb(246 241 231 / 20%);
+    background: rgb(255 255 255 / 4%);
+  }
+  .triage label {
+    display: block;
+    margin-bottom: var(--space-2);
+    font-weight: 700;
+  }
+  .triage textarea {
+    width: 100%;
+    padding: 1rem;
+    resize: vertical;
+    border: 1px solid rgb(246 241 231 / 30%);
+    background: #101d22;
+    color: var(--paper);
+    font: inherit;
+  }
+  .triage__examples {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-block: var(--space-3);
+  }
+  .triage__examples button {
+    width: 2.3rem;
+    height: 2.3rem;
+    border: 1px solid rgb(246 241 231 / 30%);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--paper);
+    cursor: pointer;
+  }
+  #triage-status {
+    display: block;
+    margin-top: var(--space-3);
+  }
+  .decision {
+    display: inline-block;
+    padding: 0.35rem 0.65rem;
+    background: var(--gold);
+    color: var(--ink);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+  }
+  .triage__result h3 {
+    margin-block: var(--space-3) var(--space-4);
+    color: var(--paper);
+  }
+  .triage__result dl {
+    display: grid;
+    gap: 0.8rem;
+  }
+  .triage__result dl div {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: 1rem;
+    border-bottom: 1px solid rgb(246 241 231 / 12%);
+    padding-bottom: 0.7rem;
+  }
+  .triage__result dt {
+    color: rgb(246 241 231 / 62%);
+  }
+  .triage__result dd {
+    margin: 0;
+    font-weight: 650;
+  }
+  .decision-reason {
+    margin-top: var(--space-4);
+  }
+  .triage__result article {
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+    border-top: 1px solid rgb(246 241 231 / 20%);
+  }
+  .triage__result a {
+    color: var(--gold);
+  }
+  @media (max-width: 800px) {
+    .triage__intro,
+    .triage__layout {
+      grid-template-columns: 1fr;
+    }
+    .triage__result dl div {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+  }
+</style>

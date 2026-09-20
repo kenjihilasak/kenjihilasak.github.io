@@ -13,6 +13,51 @@ export type CaseStudy = {
 };
 
 export const caseStudies: Record<string, CaseStudy> = {
+  "uol-finance-ai-assistant": {
+    slug: "uol-finance-ai-assistant",
+    status: "Azure RAG engineering · 2026",
+    summary:
+      "An evidence-led assistant for exploring public university financial reports, built around measurable retrieval, page-level provenance and safe abstention.",
+    challenge:
+      "Financial reports combine narrative, tables, changing periods and similar figures. The system must retrieve the right evidence, preserve scope and units, cite the original PDF and decline questions the indexed documents cannot answer.",
+    role: "I designed the staged ingestion and evaluation pipeline, implemented Azure hybrid search and grounded generation, and separated the public interface from credentials and model access.",
+    result:
+      "The reviewed ten-question baseline achieved 100% Recall@5 and 0.825 MRR@5. A separate ten-question negative set produced 100% correct, citation-free abstention.",
+    metrics: [
+      { value: "1.00", label: "hybrid Recall@5" },
+      { value: "0.825", label: "hybrid MRR@5" },
+      { value: "10/10", label: "correct abstentions" },
+    ],
+    pipeline: [
+      "Public PDF",
+      "Validated chunks",
+      "Azure embeddings",
+      "Hybrid retrieval",
+      "Grounded answer",
+      "Page citations",
+    ],
+    approach: [
+      {
+        title: "Evaluate retrieval before generation",
+        text: "Reviewed question sets measure Recall@k and MRR independently, so a plausible language-model answer cannot hide missing evidence.",
+      },
+      {
+        title: "Make provenance part of the contract",
+        text: "Every answer must cite retrieved chunk IDs that map back to a public source document and exact PDF page.",
+      },
+      {
+        title: "Test when the system should refuse",
+        text: "A separate negative dataset checks that unsupported questions produce an abstention without decorative or misleading citations.",
+      },
+    ],
+    findings: [
+      "Hybrid BM25 and vector retrieval found a relevant chunk in the top five for all ten reviewed questions.",
+      "The first negative-dataset draft exposed a labelling error: the supposedly missing Moody’s rating was present on page 83.",
+      "The public serving boundary keeps Azure credentials out of GitHub Pages and supports an immediate cost-control switch.",
+    ],
+    reflection:
+      "The current evaluation is intentionally small and development-reviewed. Before production use, I would add independent domain review, multi-document regression tests, persistent distributed rate limiting and operational monitoring.",
+  },
   "align-and-shine": {
     slug: "align-and-shine",
     status: "Multilingual data engineering · 2026",
@@ -150,47 +195,47 @@ export const caseStudies: Record<string, CaseStudy> = {
   },
   "agentic-support-intelligence": {
     slug: "agentic-support-intelligence",
-    status: "Prototype · being rebuilt",
+    status: "Azure AI engineering · staff triage · 2026",
     summary:
-      "An experimental retrieval workflow combining order histories, policy documents and task-specific tools for customer-support questions.",
+      "A staff-facing university enquiry workbench that turns unstructured requests into a safe route, clarification request or cited draft response.",
     challenge:
-      "Support questions often need both semantic retrieval from policy documents and deterministic reasoning over structured order data. A language model alone should not decide business eligibility.",
-    role: "I prototyped document and CSV retrieval, custom tools and a multi-step agent workflow using open language models.",
+      "A shared administrative team receives finance, student-record, digital-learning and sensitive-support enquiries. The system must identify intent, detect missing information and prevent sensitive cases from reaching answer generation.",
+    role: "I designed the ingestion, Azure hybrid retrieval, structured classifier, deterministic routing policy, evaluation harness, FastAPI boundary and staff review interface.",
     result:
-      "The prototype proved the integration path but also exposed rule and timestamp assumptions that need to be moved out of the agent before this can become a reliable system.",
+      "The working system indexes eight approved sources across four answerable domains. Either conservative rules or the classifier can escalate a case, while code prevents every escalated case from entering RAG generation.",
     metrics: [
-      { value: "2", label: "data modalities" },
-      { value: "RAG", label: "grounding pattern" },
-      { value: "WIP", label: "current status" },
+      { value: "4", label: "answerable domains" },
+      { value: "8", label: "approved sources" },
+      { value: "0", label: "allowed sensitive generations" },
     ],
     pipeline: [
-      "Question",
-      "Intent routing",
-      "Policy retrieval",
-      "Order lookup",
-      "Rule engine",
-      "Grounded answer",
+      "Staff enquiry",
+      "Safety rules",
+      "Structured classification",
+      "Routing policy",
+      "Category-filtered RAG",
+      "Human review",
     ],
     approach: [
       {
-        title: "Separate retrieval from decisions",
-        text: "The rebuild will keep semantic policy retrieval in the language layer while moving eligibility rules into deterministic functions.",
+        title: "Make escalation one-way",
+        text: "Rules and model classification can both escalate an enquiry. Neither can override a sensitive referral and send it to generation.",
       },
       {
-        title: "Use structured history",
-        text: "Order events need explicit types and chronological guarantees rather than relying on ranking order from text retrieval.",
+        title: "Route before retrieval",
+        text: "Only answerable categories reach Azure hybrid search; the selected category becomes an enforced index filter rather than a user-controlled document choice.",
       },
       {
-        title: "Evaluate before adding autonomy",
-        text: "A labelled set will test retrieval, tool selection, rule accuracy and answer grounding independently.",
+        title: "Keep staff accountable",
+        text: "Generated text is a draft with source citations. Persistence records the action and review state, while sensitive raw text is redacted.",
       },
     ],
     findings: [
-      "The current notebook is a prototype and is not presented as production-ready.",
-      "The most important next step is correctness evaluation, not adding more agent steps.",
-      "The rebuild will include tests, a small API and traceable failure cases.",
+      "The corpus separates corporate finance from operational expense guidance, avoiding retrieval from the wrong financial source.",
+      "Minerva enquiries can identify missing module, assignment and error details before staff draft a response.",
+      "Sensitive cases return a specialist route without retrieval, citations or a generated substantive answer.",
     ],
     reflection:
-      "This project remains visible as work in progress because showing the engineering gap between a demo and a dependable AI product is part of the story.",
+      "This is a decision-support prototype, not an autonomous case-management system. Production use would require institutional policy review, Entra-authenticated staff access, independent safety evaluation and agreed retention controls.",
   },
 };

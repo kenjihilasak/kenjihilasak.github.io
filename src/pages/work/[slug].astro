@@ -6,6 +6,8 @@ import { projects } from "../../data/site";
 import { caseStudies } from "../../data/caseStudies";
 import lrecImage from "../../assets/lrec-2026.jpg";
 import { Image } from "astro:assets";
+import FinanceAssistantDemo from "../../components/FinanceAssistantDemo.astro";
+import AgenticSupportWorkbench from "../../components/AgenticSupportWorkbench.astro";
 
 export function getStaticPaths() {
   return projects.map((project) => ({
@@ -16,6 +18,8 @@ export function getStaticPaths() {
 
 const { project, study } = Astro.props;
 const isAlignAndShine = project.slug === "align-and-shine";
+const isFinanceAssistant = project.slug === "uol-finance-ai-assistant";
+const isAgenticSupport = project.slug === "agentic-support-intelligence";
 const publicationSchema = isAlignAndShine
   ? {
       "@context": "https://schema.org",
@@ -120,6 +124,9 @@ const publicationSchema = isAlignAndShine
       </div>
     </div>
   </section>
+
+  {isFinanceAssistant && <FinanceAssistantDemo />}
+  {isAgenticSupport && <AgenticSupportWorkbench />}
 
   <section class="section section--white pipeline">
     <div class="container">

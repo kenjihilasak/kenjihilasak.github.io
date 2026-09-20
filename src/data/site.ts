@@ -28,6 +28,19 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    title: "University finance AI assistant",
+    eyebrow: "Azure RAG · Evaluated retrieval",
+    description:
+      "A grounded question-answering system over public financial reports, with hybrid retrieval, page-level citations and explicit abstention.",
+    outcome:
+      "Reached 100% Recall@5 on a reviewed retrieval set and correctly abstained on all ten out-of-scope evaluation questions.",
+    tags: ["Python", "Azure AI Search", "Microsoft Foundry", "RAG evaluation"],
+    github: "https://github.com/kenjihilasak/uol-finance-ai-assistant",
+    demo: "/work/uol-finance-ai-assistant/#assistant-demo",
+    slug: "uol-finance-ai-assistant",
+    featured: true,
+  },
+  {
     title: "Align and Shine",
     eyebrow: "Data engineering · Multilingual NLP",
     description:
@@ -68,16 +81,23 @@ export const projects: Project[] = [
     featured: true,
   },
   {
-    title: "Agentic support intelligence",
-    eyebrow: "Applied AI · System design",
+    title: "Agentic Support Intelligence",
+    eyebrow: "Azure AI · Safe enquiry triage",
     description:
-      "An experimental retrieval system combining order histories, policy documents and task-specific tools for support questions.",
+      "A staff-facing university enquiry workbench that classifies unstructured requests, applies deterministic safety routing and drafts cited responses from approved evidence.",
     outcome:
-      "Currently being rebuilt around deterministic business rules, structured data and an explicit evaluation set.",
-    tags: ["LangChain", "smolagents", "RAG", "Evaluation"],
-    github: "https://github.com/kenjihilasak/agenticRAG",
+      "Combines four evaluated knowledge domains with a hard-coded sensitive referral branch, structured outputs and human review.",
+    tags: [
+      "Python",
+      "Azure AI Search",
+      "FastAPI",
+      "PostgreSQL",
+      "Responsible AI",
+    ],
+    github: "https://github.com/kenjihilasak/uol-finance-ai-assistant",
+    demo: "/work/agentic-support-intelligence/#live-workbench",
     slug: "agentic-support-intelligence",
-    featured: false,
+    featured: true,
   },
 ];
 
