@@ -216,12 +216,16 @@ const examples = [
         if (!response.ok)
           throw new Error(payload.detail ?? "Triage unavailable");
         const classification = payload.decision.classification;
+        const resultHeader = document.createElement("header");
+        resultHeader.className = "result-header";
         const title = document.createElement("h3");
         title.textContent = classification.summary;
         const badge = document.createElement("span");
         badge.className = `decision decision--${payload.decision.action}`;
         badge.textContent = payload.decision.action.replaceAll("_", " ");
+        resultHeader.append(badge, title);
         const dl = document.createElement("dl");
+        dl.className = "result-facts";
         dl.append(
           row("Category", classification.category),
           row("Subcategory", classification.subcategory),
@@ -242,27 +246,46 @@ const examples = [
         const reason = document.createElement("p");
         reason.className = "decision-reason";
         reason.textContent = payload.decision.reason;
-        result.replaceChildren(badge, title, dl, reason);
+        result.replaceChildren(resultHeader, dl, reason);
         if (payload.draft_response) {
           const draft = document.createElement("article");
+          draft.className = "result-draft";
+          const label = document.createElement("span");
+          label.className = "result-label";
+          label.textContent = "AI-assisted · staff review required";
           const heading = document.createElement("h4");
-          heading.textContent = "Staff-reviewed draft";
+          heading.textContent = "Draft response";
           const text = document.createElement("p");
           text.textContent = payload.draft_response;
-          draft.append(heading, text);
+          draft.append(label, heading, text);
           if (payload.citations.length) {
+            const evidenceHeading = document.createElement("h5");
+            evidenceHeading.textContent = `Evidence (${payload.citations.length})`;
             const list = document.createElement("ul");
-            payload.citations.forEach((citation: any) => {
+            list.className = "evidence-list";
+            payload.citations.forEach((citation: any, index: number) => {
               const li = document.createElement("li");
+              const details = document.createElement("details");
+              const summary = document.createElement("summary");
+              const marker = document.createElement("span");
+              marker.textContent = String(index + 1).padStart(2, "0");
+              const sourceName = document.createElement("strong");
+              sourceName.textContent = citation.title;
+              const sourceLocation = document.createElement("small");
+              sourceLocation.textContent = `Page ${citation.page_number}`;
+              summary.append(marker, sourceName, sourceLocation);
+              const excerpt = document.createElement("blockquote");
+              excerpt.textContent = citation.excerpt;
               const link = document.createElement("a");
               link.href = citation.page_url;
               link.target = "_blank";
               link.rel = "noreferrer";
-              link.textContent = `${citation.title} — source ${citation.page_number}`;
-              li.append(link);
+              link.textContent = "Open original source ↗";
+              details.append(summary, excerpt, link);
+              li.append(details);
               list.append(li);
             });
-            draft.append(list);
+            draft.append(evidenceHeading, list);
           }
           result.append(draft);
         }
@@ -370,36 +393,115 @@ const examples = [
     font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 0.06em;
+    border-radius: 999px;
   }
-  .triage__result h3 {
-    margin-block: var(--space-3) var(--space-4);
+  .result-header {
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid rgb(246 241 231 / 14%);
+  }
+  .triage__result .result-header h3 {
+    max-width: 30ch;
+    margin: var(--space-3) 0 0;
     color: var(--paper);
+    font-size: clamp(1.45rem, 3vw, 2.2rem);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
   }
-  .triage__result dl {
+  .result-facts {
     display: grid;
-    gap: 0.8rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin-block: var(--space-4);
   }
-  .triage__result dl div {
-    display: grid;
-    grid-template-columns: 9rem 1fr;
-    gap: 1rem;
-    border-bottom: 1px solid rgb(246 241 231 / 12%);
-    padding-bottom: 0.7rem;
+  .result-facts div {
+    min-width: 0;
+    padding: 0.75rem;
+    border: 1px solid rgb(246 241 231 / 12%);
+    background: rgb(255 255 255 / 3%);
   }
-  .triage__result dt {
+  .result-facts div:last-child {
+    grid-column: 1 / -1;
+  }
+  .result-facts dt {
+    margin-bottom: 0.25rem;
     color: rgb(246 241 231 / 62%);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
-  .triage__result dd {
+  .result-facts dd {
     margin: 0;
     font-weight: 650;
+    overflow-wrap: anywhere;
   }
   .decision-reason {
-    margin-top: var(--space-4);
+    margin: 0;
+    padding: 0.85rem 1rem;
+    border-left: 3px solid var(--gold);
+    background: rgb(255 255 255 / 4%);
+    color: rgb(246 241 231 / 82%);
   }
-  .triage__result article {
+  .result-draft {
     margin-top: var(--space-5);
     padding-top: var(--space-4);
     border-top: 1px solid rgb(246 241 231 / 20%);
+  }
+  .result-label {
+    color: var(--gold);
+    font-size: 0.7rem;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .result-draft h4 {
+    margin: 0.35rem 0 var(--space-3);
+    color: var(--paper);
+    font-size: 1.35rem;
+  }
+  .result-draft > p {
+    margin: 0;
+    color: rgb(246 241 231 / 84%);
+    line-height: 1.7;
+  }
+  .result-draft h5 {
+    margin: var(--space-5) 0 var(--space-2);
+    color: var(--paper);
+    font-size: 0.9rem;
+  }
+  .evidence-list {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .evidence-list details {
+    border: 1px solid rgb(246 241 231 / 14%);
+    background: rgb(255 255 255 / 3%);
+  }
+  .evidence-list summary {
+    display: grid;
+    grid-template-columns: 2rem 1fr auto;
+    gap: 0.65rem;
+    align-items: center;
+    padding: 0.8rem;
+    cursor: pointer;
+  }
+  .evidence-list summary span,
+  .evidence-list summary small {
+    color: rgb(246 241 231 / 56%);
+  }
+  .evidence-list blockquote {
+    margin: 0;
+    padding: 0.2rem 0.8rem 0.8rem 3.45rem;
+    color: rgb(246 241 231 / 72%);
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+  .evidence-list a {
+    display: inline-block;
+    margin: 0 0.8rem 0.8rem 3.45rem;
+    font-size: 0.85rem;
   }
   .triage__result a {
     color: var(--gold);
@@ -409,13 +511,27 @@ const examples = [
     .triage__layout {
       grid-template-columns: 1fr;
     }
-    .triage__result dl div {
-      grid-template-columns: 1fr;
-      gap: 0.2rem;
-    }
     .triage__auth {
       align-items: flex-start;
       flex-direction: column;
+    }
+    .result-facts {
+      grid-template-columns: 1fr;
+    }
+    .result-facts div:last-child {
+      grid-column: auto;
+    }
+    .evidence-list summary {
+      grid-template-columns: 2rem 1fr;
+    }
+    .evidence-list summary small {
+      grid-column: 2;
+    }
+    .evidence-list blockquote {
+      padding-left: 0.8rem;
+    }
+    .evidence-list a {
+      margin-left: 0.8rem;
     }
   }
 </style>
