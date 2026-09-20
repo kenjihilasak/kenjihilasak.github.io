@@ -1,0 +1,497 @@
+---
+const apiBase = (import.meta.env.PUBLIC_AGENTIC_SUPPORT_API_URL ?? "").replace(
+  /\/$/,
+  "",
+);
+const tenantId = import.meta.env.PUBLIC_STAFF_AUTH_TENANT_ID ?? "";
+const clientId = import.meta.env.PUBLIC_STAFF_AUTH_WEB_CLIENT_ID ?? "";
+const scope = import.meta.env.PUBLIC_STAFF_AUTH_API_SCOPE ?? "";
+---
+
+<section
+  class="staff-queue"
+  data-api-base={apiBase}
+  data-tenant-id={tenantId}
+  data-client-id={clientId}
+  data-scope={scope}
+>
+  <div class="container">
+    <header class="staff-queue__header">
+      <div>
+        <p class="eyebrow">Protected operations view</p>
+        <h1>Staff review queue</h1>
+        <p>
+          Review persisted triage decisions, update workflow status and export
+          an auditable Excel snapshot.
+        </p>
+      </div>
+      <a href="/work/agentic-support-intelligence/">← Return to case study</a>
+    </header>
+
+    <div id="staff-gate" class="staff-gate">
+      <p id="staff-message">
+        Sign in with the authorised Microsoft account to access persisted
+        enquiries.
+      </p>
+      <button id="staff-login" class="button" type="button"
+        >Sign in with Microsoft</button
+      >
+    </div>
+
+    <div id="queue-app" hidden>
+      <div class="queue-toolbar">
+        <label
+          >Search <input
+            id="queue-search"
+            type="search"
+            placeholder="Summary, category or route"
+          /></label
+        >
+        <label
+          >Status
+          <select id="queue-status">
+            <option value="">All</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="clarification_sent">Clarification sent</option>
+            <option value="routed">Routed</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </label>
+        <button id="queue-refresh" type="button">Refresh</button>
+        <button id="queue-export" type="button">Download Excel</button>
+        <button id="staff-logout" type="button">Sign out</button>
+      </div>
+
+      <p id="queue-status-line" class="queue-status" aria-live="polite">
+        Loading enquiries…
+      </p>
+      <div class="queue-table-wrap">
+        <table>
+          <thead
+            ><tr
+              ><th>Received</th><th>Summary</th><th>Decision</th><th>Status</th
+              ><th>Review</th></tr
+            ></thead
+          >
+          <tbody id="queue-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <dialog id="enquiry-detail">
+    <button
+      id="detail-close"
+      class="detail-close"
+      type="button"
+      aria-label="Close">×</button
+    >
+    <p class="eyebrow">Enquiry detail</p>
+    <h2 id="detail-summary"></h2>
+    <dl id="detail-facts"></dl>
+    <section><h3>Stored enquiry</h3><p id="detail-enquiry"></p></section>
+    <section><h3>Draft response</h3><p id="detail-draft"></p></section>
+  </dialog>
+</section>
+
+<script>
+  import {
+    PublicClientApplication,
+    type AccountInfo,
+  } from "@azure/msal-browser";
+
+  type Enquiry = Record<string, any>;
+  const root = document.querySelector<HTMLElement>(".staff-queue");
+  if (root) {
+    const apiBase = root.dataset.apiBase ?? "";
+    const tenantId = root.dataset.tenantId ?? "";
+    const clientId = root.dataset.clientId ?? "";
+    const scope = root.dataset.scope ?? "";
+    // This exact URI is registered on the Entra SPA application. The popup can
+    // return here while the authenticated account remains available to /staff/.
+    const redirectUri = `${window.location.origin}/work/agentic-support-intelligence/`;
+    const msal = new PublicClientApplication({
+      auth: {
+        clientId,
+        authority: `https://login.microsoftonline.com/${tenantId}`,
+        redirectUri,
+        postLogoutRedirectUri: redirectUri,
+      },
+      cache: { cacheLocation: "sessionStorage" },
+    });
+    await msal.initialize();
+
+    let account: AccountInfo | null = msal.getAllAccounts()[0] ?? null;
+    let enquiries: Enquiry[] = [];
+    const gate = root.querySelector<HTMLElement>("#staff-gate")!;
+    const app = root.querySelector<HTMLElement>("#queue-app")!;
+    const message = root.querySelector<HTMLElement>("#staff-message")!;
+    const login = root.querySelector<HTMLButtonElement>("#staff-login")!;
+    const logout = root.querySelector<HTMLButtonElement>("#staff-logout")!;
+    const refresh = root.querySelector<HTMLButtonElement>("#queue-refresh")!;
+    const exportButton =
+      root.querySelector<HTMLButtonElement>("#queue-export")!;
+    const search = root.querySelector<HTMLInputElement>("#queue-search")!;
+    const statusFilter =
+      root.querySelector<HTMLSelectElement>("#queue-status")!;
+    const statusLine = root.querySelector<HTMLElement>("#queue-status-line")!;
+    const body = root.querySelector<HTMLTableSectionElement>("#queue-body")!;
+    const dialog = root.querySelector<HTMLDialogElement>("#enquiry-detail")!;
+
+    const accessToken = async () => {
+      if (!account) throw new Error("Staff sign-in required");
+      return (await msal.acquireTokenSilent({ account, scopes: [scope] }))
+        .accessToken;
+    };
+    const authHeaders = async (json = false) => ({
+      ...(json ? { "Content-Type": "application/json" } : {}),
+      Authorization: `Bearer ${await accessToken()}`,
+    });
+    const fact = (term: string, value: string) => {
+      const wrapper = document.createElement("div");
+      const dt = document.createElement("dt");
+      dt.textContent = term;
+      const dd = document.createElement("dd");
+      dd.textContent = value || "—";
+      wrapper.append(dt, dd);
+      return wrapper;
+    };
+    const showDetail = (record: Enquiry) => {
+      root.querySelector<HTMLElement>("#detail-summary")!.textContent =
+        record.summary;
+      root.querySelector<HTMLElement>("#detail-enquiry")!.textContent =
+        record.enquiry;
+      root.querySelector<HTMLElement>("#detail-draft")!.textContent =
+        record.draft_response || "No draft generated.";
+      const facts = root.querySelector<HTMLElement>("#detail-facts")!;
+      facts.replaceChildren(
+        fact("Category", record.category),
+        fact("Subcategory", record.subcategory),
+        fact("Action", record.action),
+        fact("Route", record.route_to),
+        fact("Staff", record.staff_display_name),
+        fact("Created", new Date(record.created_at_utc).toLocaleString()),
+      );
+      dialog.showModal();
+    };
+    const render = () => {
+      const query = search.value.trim().toLowerCase();
+      const selectedStatus = statusFilter.value;
+      const filtered = enquiries.filter((item) => {
+        const haystack =
+          `${item.summary} ${item.category} ${item.route_to}`.toLowerCase();
+        return (
+          (!query || haystack.includes(query)) &&
+          (!selectedStatus || item.review_status === selectedStatus)
+        );
+      });
+      body.replaceChildren();
+      filtered.forEach((record) => {
+        const tr = document.createElement("tr");
+        const received = document.createElement("td");
+        received.textContent = new Date(record.created_at_utc).toLocaleString();
+        const summaryCell = document.createElement("td");
+        const summaryButton = document.createElement("button");
+        summaryButton.className = "summary-button";
+        summaryButton.textContent = record.summary;
+        summaryButton.addEventListener("click", () => showDetail(record));
+        summaryCell.append(summaryButton);
+        const decision = document.createElement("td");
+        decision.textContent = `${record.category} · ${record.action.replaceAll("_", " ")}`;
+        const current = document.createElement("td");
+        const badge = document.createElement("span");
+        badge.className = `status-badge status-${record.review_status}`;
+        badge.textContent = record.review_status.replaceAll("_", " ");
+        current.append(badge);
+        const review = document.createElement("td");
+        const select = document.createElement("select");
+        [
+          "pending",
+          "approved",
+          "clarification_sent",
+          "routed",
+          "rejected",
+        ].forEach((value) => {
+          const option = document.createElement("option");
+          option.value = value;
+          option.textContent = value.replaceAll("_", " ");
+          option.selected = value === record.review_status;
+          select.append(option);
+        });
+        select.addEventListener("change", async () => {
+          select.disabled = true;
+          const response = await fetch(
+            `${apiBase}/v1/staff/enquiries/${record.enquiry_id}`,
+            {
+              method: "PATCH",
+              headers: await authHeaders(true),
+              body: JSON.stringify({ review_status: select.value }),
+            },
+          );
+          if (!response.ok) {
+            select.value = record.review_status;
+            statusLine.textContent = "Could not update review status.";
+          } else {
+            record.review_status = select.value;
+            statusLine.textContent = `Updated ${record.enquiry_id}.`;
+            render();
+          }
+          select.disabled = false;
+        });
+        review.append(select);
+        tr.append(received, summaryCell, decision, current, review);
+        body.append(tr);
+      });
+      statusLine.textContent = `${filtered.length} of ${enquiries.length} enquiries shown.`;
+    };
+    const load = async () => {
+      statusLine.textContent = "Loading enquiries…";
+      const response = await fetch(`${apiBase}/v1/staff/enquiries?limit=500`, {
+        headers: await authHeaders(),
+      });
+      if (!response.ok)
+        throw new Error(
+          (await response.json()).detail ?? "Could not load enquiries",
+        );
+      enquiries = await response.json();
+      render();
+    };
+    const enter = async () => {
+      if (!account) return;
+      gate.hidden = true;
+      app.hidden = false;
+      try {
+        await load();
+      } catch (error) {
+        statusLine.textContent =
+          error instanceof Error ? error.message : "Could not load enquiries";
+      }
+    };
+    login.addEventListener("click", async () => {
+      try {
+        const result = await msal.loginPopup({ scopes: [scope] });
+        account = result.account;
+        await enter();
+      } catch (error) {
+        message.textContent =
+          error instanceof Error ? error.message : "Sign-in failed";
+      }
+    });
+    logout.addEventListener("click", async () => {
+      if (account)
+        await msal.logoutPopup({ account, postLogoutRedirectUri: redirectUri });
+    });
+    refresh.addEventListener("click", load);
+    search.addEventListener("input", render);
+    statusFilter.addEventListener("change", render);
+    exportButton.addEventListener("click", async () => {
+      const response = await fetch(
+        `${apiBase}/v1/staff/enquiries/export.xlsx`,
+        { headers: await authHeaders() },
+      );
+      if (!response.ok) {
+        statusLine.textContent = "Excel export failed.";
+        return;
+      }
+      const url = URL.createObjectURL(await response.blob());
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = "triage-enquiries.xlsx";
+      anchor.click();
+      URL.revokeObjectURL(url);
+    });
+    root
+      .querySelector<HTMLButtonElement>("#detail-close")!
+      .addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    if (account) enter();
+  }
+</script>
+
+<style>
+  .staff-queue {
+    min-height: 72vh;
+    padding-block: var(--space-8);
+    background: var(--paper);
+  }
+  .staff-queue__header {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-6);
+    align-items: flex-start;
+    margin-bottom: var(--space-6);
+  }
+  .staff-queue__header h1 {
+    max-width: 14ch;
+    margin: 0.3rem 0 var(--space-2);
+  }
+  .staff-queue__header p {
+    max-width: 65ch;
+  }
+  .staff-gate {
+    max-width: 42rem;
+    padding: var(--space-6);
+    border: 1px solid var(--line);
+    background: var(--white);
+  }
+  .queue-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: end;
+    margin-bottom: var(--space-4);
+    padding: var(--space-4);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .queue-toolbar label {
+    display: grid;
+    gap: 0.3rem;
+    font-size: 0.78rem;
+  }
+  .queue-toolbar input,
+  .queue-toolbar select,
+  .queue-toolbar button {
+    min-height: 2.6rem;
+    padding: 0.55rem 0.7rem;
+    font: inherit;
+  }
+  .queue-toolbar input {
+    min-width: 16rem;
+  }
+  .queue-status {
+    color: var(--muted);
+  }
+  .queue-table-wrap {
+    overflow: auto;
+    border: 1px solid var(--line);
+    background: var(--white);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+  th,
+  td {
+    padding: 0.85rem;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #efe9df;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  td:first-child {
+    min-width: 10rem;
+  }
+  td:nth-child(2) {
+    min-width: 20rem;
+  }
+  td:nth-child(3) {
+    min-width: 14rem;
+  }
+  .summary-button {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--teal);
+    font: inherit;
+    font-weight: 650;
+    text-align: left;
+    cursor: pointer;
+  }
+  .status-badge {
+    display: inline-block;
+    padding: 0.3rem 0.55rem;
+    border-radius: 999px;
+    background: #ded8cf;
+    font-size: 0.7rem;
+    font-weight: 750;
+    text-transform: uppercase;
+  }
+  .status-approved {
+    background: #d7eadb;
+    color: #18542b;
+  }
+  .status-rejected {
+    background: #f2d7d5;
+    color: #7b2520;
+  }
+  .status-routed {
+    background: #d7e6ef;
+    color: #174d6b;
+  }
+  dialog {
+    width: min(44rem, calc(100% - 2rem));
+    max-height: 85vh;
+    overflow: auto;
+    padding: var(--space-6);
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+  }
+  dialog::backdrop {
+    background: rgb(10 25 28 / 72%);
+  }
+  .detail-close {
+    float: right;
+    border: 0;
+    background: none;
+    font-size: 2rem;
+    cursor: pointer;
+  }
+  dialog h2 {
+    max-width: 25ch;
+    font-size: var(--step-3);
+  }
+  dialog dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+  dialog dl div {
+    padding: 0.75rem;
+    border: 1px solid var(--line);
+  }
+  dialog dt {
+    color: var(--muted);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+  }
+  dialog dd {
+    margin: 0.25rem 0 0;
+    font-weight: 650;
+  }
+  dialog section {
+    margin-top: var(--space-5);
+  }
+  dialog section p {
+    white-space: pre-wrap;
+    line-height: 1.65;
+  }
+  @media (max-width: 760px) {
+    .staff-queue__header {
+      flex-direction: column;
+    }
+    .queue-toolbar {
+      align-items: stretch;
+    }
+    .queue-toolbar label {
+      width: 100%;
+    }
+    .queue-toolbar input {
+      min-width: 0;
+      width: 100%;
+    }
+    dialog dl {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
