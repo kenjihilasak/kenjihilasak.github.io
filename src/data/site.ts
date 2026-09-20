@@ -81,16 +81,23 @@ export const projects: Project[] = [
     featured: true,
   },
   {
-    title: "Agentic support intelligence",
-    eyebrow: "Applied AI · System design",
+    title: "Agentic Support Intelligence",
+    eyebrow: "Azure AI · Safe enquiry triage",
     description:
-      "An experimental retrieval system combining order histories, policy documents and task-specific tools for support questions.",
+      "A staff-facing university enquiry workbench that classifies unstructured requests, applies deterministic safety routing and drafts cited responses from approved evidence.",
     outcome:
-      "Currently being rebuilt around deterministic business rules, structured data and an explicit evaluation set.",
-    tags: ["LangChain", "smolagents", "RAG", "Evaluation"],
-    github: "https://github.com/kenjihilasak/agenticRAG",
+      "Combines four evaluated knowledge domains with a hard-coded sensitive referral branch, structured outputs and human review.",
+    tags: [
+      "Python",
+      "Azure AI Search",
+      "FastAPI",
+      "PostgreSQL",
+      "Responsible AI",
+    ],
+    github: "https://github.com/kenjihilasak/uol-finance-ai-assistant",
+    demo: "/work/agentic-support-intelligence/#live-workbench",
     slug: "agentic-support-intelligence",
-    featured: false,
+    featured: true,
   },
 ];
 
