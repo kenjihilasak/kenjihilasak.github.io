@@ -44,13 +44,13 @@ const examples = [
       <button
         id="auth-button"
         type="button"
-        class="button button--secondary"
+        class="button triage__auth-signin"
         hidden
       >
         Sign in with Microsoft
       </button>
       <a
-        class="button button--secondary"
+        class="button triage__queue-link"
         href="/work/agentic-support-intelligence/staff/"
       >
         Open staff queue
@@ -186,6 +186,11 @@ const examples = [
       div.append(dt, dd);
       return div;
     };
+    const humanise = (value: string) =>
+      value
+        .replaceAll("_", " ")
+        .replaceAll(",", " ·")
+        .replace(/^\w/, (letter) => letter.toUpperCase());
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       if (!apiBase) {
@@ -233,9 +238,9 @@ const examples = [
         const dl = document.createElement("dl");
         dl.className = "result-facts";
         dl.append(
-          row("Category", classification.category),
-          row("Subcategory", classification.subcategory),
-          row("Route", payload.decision.route_to.replaceAll("_", " ")),
+          row("Category", humanise(classification.category)),
+          row("Subcategory", humanise(classification.subcategory)),
+          row("Route", humanise(payload.decision.route_to)),
           row(
             "Sensitive",
             classification.is_sensitive || payload.decision.rule_flags.length
@@ -351,6 +356,26 @@ const examples = [
     margin: 0.25rem 0 0;
     color: rgb(246 241 231 / 70%);
   }
+  .triage__auth-signin {
+    border-color: var(--gold);
+    background: var(--gold);
+    color: var(--ink);
+  }
+  .triage__auth-signin:hover {
+    border-color: var(--mint);
+    background: var(--mint);
+    color: var(--ink);
+  }
+  .triage__queue-link {
+    border-color: rgb(246 241 231 / 62%);
+    background: transparent;
+    color: var(--paper);
+  }
+  .triage__queue-link:hover {
+    border-color: var(--paper);
+    background: var(--paper);
+    color: var(--ink);
+  }
   .triage__input,
   .triage__result {
     padding: var(--space-5);
@@ -390,7 +415,7 @@ const examples = [
     display: block;
     margin-top: var(--space-3);
   }
-  .decision {
+  :global(.decision) {
     display: inline-block;
     padding: 0.35rem 0.65rem;
     background: var(--gold);
@@ -401,91 +426,91 @@ const examples = [
     letter-spacing: 0.06em;
     border-radius: 999px;
   }
-  .result-header {
+  :global(.result-header) {
     padding-bottom: var(--space-4);
     border-bottom: 1px solid rgb(246 241 231 / 14%);
   }
-  .triage__result .result-header h3 {
-    max-width: 30ch;
+  .triage__result :global(.result-header h3) {
+    max-width: 38ch;
     margin: var(--space-3) 0 0;
     color: var(--paper);
-    font-size: clamp(1.45rem, 3vw, 2.2rem);
-    line-height: 1.08;
+    font-size: clamp(1.3rem, 2.1vw, 1.75rem);
+    line-height: 1.16;
     letter-spacing: -0.025em;
   }
-  .result-facts {
+  :global(.result-facts) {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.65rem;
     margin-block: var(--space-4);
   }
-  .result-facts div {
+  :global(.result-facts div) {
     min-width: 0;
     padding: 0.75rem;
     border: 1px solid rgb(246 241 231 / 12%);
     background: rgb(255 255 255 / 3%);
   }
-  .result-facts div:last-child {
+  :global(.result-facts div:last-child) {
     grid-column: 1 / -1;
   }
-  .result-facts dt {
+  :global(.result-facts dt) {
     margin-bottom: 0.25rem;
     color: rgb(246 241 231 / 62%);
     font-size: 0.72rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
   }
-  .result-facts dd {
+  :global(.result-facts dd) {
     margin: 0;
     font-weight: 650;
     overflow-wrap: anywhere;
   }
-  .decision-reason {
+  :global(.decision-reason) {
     margin: 0;
     padding: 0.85rem 1rem;
     border-left: 3px solid var(--gold);
     background: rgb(255 255 255 / 4%);
     color: rgb(246 241 231 / 82%);
   }
-  .result-draft {
+  :global(.result-draft) {
     margin-top: var(--space-5);
     padding-top: var(--space-4);
     border-top: 1px solid rgb(246 241 231 / 20%);
   }
-  .result-label {
+  :global(.result-label) {
     color: var(--gold);
     font-size: 0.7rem;
     font-weight: 750;
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
-  .result-draft h4 {
+  :global(.result-draft h4) {
     margin: 0.35rem 0 var(--space-3);
     color: var(--paper);
     font-size: 1.35rem;
   }
-  .result-draft > p {
+  :global(.result-draft > p) {
     margin: 0;
     color: rgb(246 241 231 / 84%);
     line-height: 1.7;
   }
-  .result-draft h5 {
+  :global(.result-draft h5) {
     margin: var(--space-5) 0 var(--space-2);
     color: var(--paper);
     font-size: 0.9rem;
   }
-  .evidence-list {
+  :global(.evidence-list) {
     display: grid;
     gap: 0.5rem;
     margin: 0;
     padding: 0;
     list-style: none;
   }
-  .evidence-list details {
+  :global(.evidence-list details) {
     border: 1px solid rgb(246 241 231 / 14%);
     background: rgb(255 255 255 / 3%);
   }
-  .evidence-list summary {
+  :global(.evidence-list summary) {
     display: grid;
     grid-template-columns: 2rem 1fr auto;
     gap: 0.65rem;
@@ -493,23 +518,23 @@ const examples = [
     padding: 0.8rem;
     cursor: pointer;
   }
-  .evidence-list summary span,
-  .evidence-list summary small {
+  :global(.evidence-list summary span),
+  :global(.evidence-list summary small) {
     color: rgb(246 241 231 / 56%);
   }
-  .evidence-list blockquote {
+  :global(.evidence-list blockquote) {
     margin: 0;
     padding: 0.2rem 0.8rem 0.8rem 3.45rem;
     color: rgb(246 241 231 / 72%);
     font-size: 0.88rem;
     line-height: 1.55;
   }
-  .evidence-list a {
+  :global(.evidence-list a) {
     display: inline-block;
     margin: 0 0.8rem 0.8rem 3.45rem;
     font-size: 0.85rem;
   }
-  .triage__result a {
+  .triage__result :global(a) {
     color: var(--gold);
   }
   @media (max-width: 800px) {
@@ -521,22 +546,22 @@ const examples = [
       align-items: flex-start;
       flex-direction: column;
     }
-    .result-facts {
+    :global(.result-facts) {
       grid-template-columns: 1fr;
     }
-    .result-facts div:last-child {
+    :global(.result-facts div:last-child) {
       grid-column: auto;
     }
-    .evidence-list summary {
+    :global(.evidence-list summary) {
       grid-template-columns: 2rem 1fr;
     }
-    .evidence-list summary small {
+    :global(.evidence-list summary small) {
       grid-column: 2;
     }
-    .evidence-list blockquote {
+    :global(.evidence-list blockquote) {
       padding-left: 0.8rem;
     }
-    .evidence-list a {
+    :global(.evidence-list a) {
       margin-left: 0.8rem;
     }
   }
