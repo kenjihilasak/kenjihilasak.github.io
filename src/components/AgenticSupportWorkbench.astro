@@ -4,6 +4,9 @@ const apiBase = (
   import.meta.env.PUBLIC_UOL_FINANCE_API_URL ??
   ""
 ).replace(/\/$/, "");
+const authTenantId = import.meta.env.PUBLIC_STAFF_AUTH_TENANT_ID ?? "";
+const authClientId = import.meta.env.PUBLIC_STAFF_AUTH_WEB_CLIENT_ID ?? "";
+const authScope = import.meta.env.PUBLIC_STAFF_AUTH_API_SCOPE ?? "";
 const examples = [
   "A visitor lost the original meal receipt. What evidence can we accept?",
   "A student cannot submit coursework in Minerva and has not provided the module code.",
@@ -11,7 +14,14 @@ const examples = [
 ];
 ---
 
-<section class="section triage" id="live-workbench" data-api-base={apiBase}>
+<section
+  class="section triage"
+  id="live-workbench"
+  data-api-base={apiBase}
+  data-auth-tenant-id={authTenantId}
+  data-auth-client-id={authClientId}
+  data-auth-scope={authScope}
+>
   <div class="container">
     <div class="triage__intro">
       <div>
@@ -23,6 +33,22 @@ const examples = [
         deterministic routing, and only retrieves evidence when generation is
         allowed.
       </p>
+    </div>
+    <div class="triage__auth">
+      <div>
+        <strong id="auth-mode">Public demo mode</strong>
+        <p id="auth-detail">
+          Results are not stored. Use synthetic enquiries only.
+        </p>
+      </div>
+      <button
+        id="auth-button"
+        type="button"
+        class="button button--secondary"
+        hidden
+      >
+        Sign in with Microsoft
+      </button>
     </div>
     <div class="triage__layout">
       <form id="triage-form" class="triage__input">
@@ -68,6 +94,11 @@ const examples = [
 </section>
 
 <script>
+  import {
+    PublicClientApplication,
+    type AccountInfo,
+  } from "@azure/msal-browser";
+
   const root = document.querySelector<HTMLElement>(".triage");
   if (root) {
     const apiBase = root.dataset.apiBase ?? "";
@@ -78,6 +109,60 @@ const examples = [
     const submit = form.querySelector<HTMLButtonElement>(
       "button[type=submit]",
     )!;
+    const authButton = root.querySelector<HTMLButtonElement>("#auth-button")!;
+    const authMode = root.querySelector<HTMLElement>("#auth-mode")!;
+    const authDetail = root.querySelector<HTMLElement>("#auth-detail")!;
+    const tenantId = root.dataset.authTenantId ?? "";
+    const clientId = root.dataset.authClientId ?? "";
+    const scope = root.dataset.authScope ?? "";
+    const authConfigured = Boolean(tenantId && clientId && scope);
+    const redirectUri = `${window.location.origin}${window.location.pathname}`;
+    const msal = authConfigured
+      ? new PublicClientApplication({
+          auth: {
+            clientId,
+            authority: `https://login.microsoftonline.com/${tenantId}`,
+            redirectUri,
+            postLogoutRedirectUri: redirectUri,
+          },
+          cache: { cacheLocation: "sessionStorage" },
+        })
+      : null;
+    let account: AccountInfo | null = null;
+
+    const renderAuth = () => {
+      if (!authConfigured || !msal) return;
+      authButton.hidden = false;
+      if (account) {
+        authMode.textContent = "Authenticated staff mode";
+        authDetail.textContent = `${account.username ?? account.name ?? "Staff user"} · submissions are stored for review.`;
+        authButton.textContent = "Sign out";
+      } else {
+        authMode.textContent = "Public demo mode";
+        authDetail.textContent =
+          "Results are not stored. Sign in to use the staff review queue.";
+        authButton.textContent = "Sign in with Microsoft";
+      }
+    };
+
+    if (msal) {
+      await msal.initialize();
+      account = msal.getAllAccounts()[0] ?? null;
+      renderAuth();
+      authButton.addEventListener("click", async () => {
+        if (account) {
+          await msal.logoutPopup({
+            account,
+            postLogoutRedirectUri: redirectUri,
+          });
+          account = null;
+        } else {
+          const login = await msal.loginPopup({ scopes: [scope] });
+          account = login.account;
+        }
+        renderAuth();
+      });
+    }
     root
       .querySelectorAll<HTMLButtonElement>("[data-example]")
       .forEach((button) => {
@@ -105,10 +190,27 @@ const examples = [
       submit.disabled = true;
       status.textContent = "Classifying and applying routing policy…";
       try {
-        const response = await fetch(`${apiBase}/v1/triage`, {
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
+        let endpoint = `${apiBase}/v1/triage`;
+        let body: { enquiry: string; persist?: boolean } = {
+          enquiry: input.value.trim(),
+          persist: false,
+        };
+        if (msal && account) {
+          const token = await msal.acquireTokenSilent({
+            account,
+            scopes: [scope],
+          });
+          headers.Authorization = `Bearer ${token.accessToken}`;
+          endpoint = `${apiBase}/v1/staff/triage`;
+          body = { enquiry: input.value.trim() };
+        }
+        const response = await fetch(endpoint, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ enquiry: input.value.trim(), persist: false }),
+          headers,
+          body: JSON.stringify(body),
         });
         const payload = await response.json();
         if (!response.ok)
@@ -164,9 +266,12 @@ const examples = [
           }
           result.append(draft);
         }
-        status.textContent = payload.decision.allow_generation
+        const resultStatus = payload.decision.allow_generation
           ? "Draft grounded in approved evidence"
           : "Safely routed without answer generation";
+        status.textContent = account
+          ? `${resultStatus} · saved for staff review`
+          : resultStatus;
       } catch (error) {
         status.textContent =
           error instanceof Error ? error.message : "Request failed";
@@ -202,6 +307,20 @@ const examples = [
     display: grid;
     grid-template-columns: 0.9fr 1.1fr;
     gap: var(--space-5);
+  }
+  .triage__auth {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+    padding: var(--space-4);
+    border: 1px solid rgb(246 241 231 / 20%);
+    background: rgb(255 255 255 / 4%);
+  }
+  .triage__auth p {
+    margin: 0.25rem 0 0;
+    color: rgb(246 241 231 / 70%);
   }
   .triage__input,
   .triage__result {
@@ -293,6 +412,10 @@ const examples = [
     .triage__result dl div {
       grid-template-columns: 1fr;
       gap: 0.2rem;
+    }
+    .triage__auth {
+      align-items: flex-start;
+      flex-direction: column;
     }
   }
 </style>
