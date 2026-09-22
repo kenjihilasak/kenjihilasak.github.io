@@ -8,9 +8,26 @@ const authTenantId = import.meta.env.PUBLIC_STAFF_AUTH_TENANT_ID ?? "";
 const authClientId = import.meta.env.PUBLIC_STAFF_AUTH_WEB_CLIENT_ID ?? "";
 const authScope = import.meta.env.PUBLIC_STAFF_AUTH_API_SCOPE ?? "";
 const examples = [
-  "A visitor lost the original meal receipt. What evidence can we accept?",
-  "A student cannot submit coursework in Minerva and has not provided the module code.",
-  "A student needs to change their address because someone is stalking them.",
+  {
+    label: "Sensitive",
+    enquiry:
+      "A student reports that another person is stalking them and they no longer feel safe attending seminars.",
+  },
+  {
+    label: "Unsupported",
+    enquiry:
+      "A ceiling air-conditioning unit is leaking water directly onto workstations in a university laboratory.",
+  },
+  {
+    label: "Missing info",
+    enquiry:
+      "A student cannot submit coursework in Minerva and has not provided the module code or assignment name.",
+  },
+  {
+    label: "RAG draft",
+    enquiry:
+      "A visitor lost the original meal receipt. What alternative evidence can support the expense claim?",
+  },
 ];
 ---
 
@@ -69,8 +86,12 @@ const examples = [
           <span>Try an example</span>
           {
             examples.map((example, index) => (
-              <button type="button" data-example={example}>
-                0{index + 1}
+              <button
+                type="button"
+                data-example={example.enquiry}
+                aria-label={`Example ${index + 1}: ${example.label}`}
+              >
+                <span>0{index + 1}</span> {example.label}
               </button>
             ))
           }
@@ -395,18 +416,23 @@ const examples = [
   }
   .triage__examples {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 0.6rem;
     margin-block: var(--space-3);
   }
   .triage__examples button {
-    width: 2.3rem;
-    height: 2.3rem;
+    min-height: 2.3rem;
+    padding: 0.45rem 0.7rem;
     border: 1px solid rgb(246 241 231 / 30%);
-    border-radius: 50%;
+    border-radius: 999px;
     background: transparent;
     color: var(--paper);
     cursor: pointer;
+  }
+  .triage__examples button span {
+    margin-right: 0.25rem;
+    color: rgb(246 241 231 / 62%);
   }
   #triage-status {
     display: block;
