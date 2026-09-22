@@ -205,8 +205,8 @@ export const caseStudies: Record<string, CaseStudy> = {
       "The working system indexes eight approved sources across four answerable domains. Either conservative rules or the classifier can escalate a case, while code prevents every escalated case from entering RAG generation.",
     metrics: [
       { value: "4", label: "answerable domains" },
-      { value: "8", label: "approved sources" },
-      { value: "0", label: "allowed sensitive generations" },
+      { value: "21", label: "evaluated triage cases" },
+      { value: "0", label: "sensitive generation leaks" },
     ],
     pipeline: [
       "Staff enquiry",

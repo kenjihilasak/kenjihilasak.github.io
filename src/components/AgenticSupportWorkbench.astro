@@ -300,9 +300,16 @@ const examples = [
           }
           result.append(draft);
         }
-        const resultStatus = payload.decision.allow_generation
-          ? "Draft grounded in approved evidence"
-          : "Safely routed without answer generation";
+        const statusByAction: Record<string, string> = {
+          draft_response: "Draft grounded in approved evidence",
+          request_clarification:
+            "Staff decision required: request details or route enquiry",
+          specialist_referral:
+            "Specialist referral — retrieval and generation blocked",
+          manual_review: "Manual triage — retrieval and generation blocked",
+        };
+        const resultStatus =
+          statusByAction[payload.decision.action] ?? "Staff review required";
         status.textContent = account
           ? `${resultStatus} · saved for staff review`
           : resultStatus;
