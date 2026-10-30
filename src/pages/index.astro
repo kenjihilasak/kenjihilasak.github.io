@@ -610,7 +610,7 @@ const experiencePreview = experience
 
   @media (max-width: 42rem) {
     .hero {
-      padding-top: var(--space-5);
+      padding-block: var(--hero-pad-top) var(--hero-pad-bottom);
     }
 
     .hero__grid {
@@ -618,16 +618,15 @@ const experiencePreview = experience
     }
 
     .hero .eyebrow {
-      margin-bottom: var(--space-3);
+      margin-bottom: var(--hero-eyebrow-gap);
     }
 
     .hero h1 {
       max-width: none;
-      font-size: clamp(2.1rem, 9.2vw, 3rem);
     }
 
     .hero__aside .lede {
-      font-size: 1.02rem;
+      font-size: var(--hero-lede);
     }
 
     .hero__actions {

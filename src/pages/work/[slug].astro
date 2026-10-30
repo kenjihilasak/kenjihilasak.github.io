@@ -551,6 +551,36 @@ const publicationSchema = isAlignAndShine
     }
   }
 
+  @media (max-width: 42rem) {
+    .case-hero {
+      padding-block: var(--hero-pad-top) var(--hero-pad-bottom);
+    }
+
+    .back-link {
+      margin-bottom: var(--space-5);
+    }
+
+    .case-hero__grid {
+      gap: var(--space-4);
+    }
+
+    .case-hero .eyebrow {
+      margin-bottom: var(--hero-eyebrow-gap);
+    }
+
+    .case-hero h1 {
+      max-width: none;
+    }
+
+    .case-hero .lede {
+      font-size: var(--hero-lede);
+    }
+
+    .case-hero .tag-list {
+      margin-top: var(--space-4);
+    }
+  }
+
   @media (max-width: 45rem) {
     .metrics__grid,
     .pipeline__flow {

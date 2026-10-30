@@ -410,6 +410,40 @@ ul {
   }
 }
 
+@media (max-width: 42rem) {
+  :root {
+    --step-6: clamp(2.1rem, 9.2vw, 3rem);
+    --step-5: clamp(1.75rem, 7.6vw, 2.25rem);
+    --step-4: clamp(1.55rem, 6.6vw, 2rem);
+    --step-3: clamp(1.4rem, 5.8vw, 1.75rem);
+    --hero-pad-top: var(--space-5);
+    --hero-pad-bottom: var(--space-7);
+    --hero-eyebrow-gap: var(--space-3);
+    --hero-lede: 1.02rem;
+  }
+
+  h1 {
+    font-size: var(--step-6);
+  }
+
+  .page-hero h1 {
+    max-width: none;
+  }
+
+  .page-hero {
+    padding-block: var(--hero-pad-top) var(--hero-pad-bottom);
+  }
+
+  .page-hero .eyebrow {
+    margin-bottom: var(--hero-eyebrow-gap);
+  }
+
+  .page-hero .lede {
+    margin-top: var(--space-4);
+    font-size: var(--hero-lede);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

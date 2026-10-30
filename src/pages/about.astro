@@ -401,6 +401,24 @@ import { site } from "../data/site";
     }
   }
 
+  @media (max-width: 42rem) {
+    .about-hero {
+      padding-block: var(--hero-pad-top) var(--hero-pad-bottom);
+    }
+
+    .about-hero__grid {
+      gap: var(--space-5);
+    }
+
+    .about-hero .eyebrow {
+      margin-bottom: var(--hero-eyebrow-gap);
+    }
+
+    .about-hero h1 {
+      max-width: none;
+    }
+  }
+
   @media (max-width: 50rem) {
     .about-hero__grid,
     .story__grid,
