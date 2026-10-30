@@ -329,8 +329,16 @@ ul {
     --space-9: 6.5rem;
   }
 
+  h1 {
+    font-size: clamp(2.6rem, 12vw, 4.25rem);
+  }
+
   .section {
     padding-block: var(--space-8);
+  }
+
+  .text-link {
+    min-height: 44px;
   }
 }
 

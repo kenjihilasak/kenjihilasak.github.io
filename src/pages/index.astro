@@ -17,7 +17,7 @@ const featuredProjects = projects
     (first, second) =>
       featuredOrder.indexOf(first.slug) - featuredOrder.indexOf(second.slug),
   );
-const experienceOrder = ["BBVA", "INDRA", "University of Leeds"];
+const experienceOrder = ["University of Leeds", "BBVA", "INDRA"];
 const experiencePreview = experience
   .filter((item) =>
     experienceOrder.some((organisation) =>
@@ -326,11 +326,15 @@ const experiencePreview = experience
 
   .project-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .project-grid :global(.project-card:not(:last-child)) {
+  .project-grid :global(.project-card:nth-child(odd)) {
     border-right: 0;
+  }
+
+  .project-grid :global(.project-card:nth-child(n + 3)) {
+    border-top: 0;
   }
 
   .text-link {
@@ -478,8 +482,12 @@ const experiencePreview = experience
       gap: var(--space-4);
     }
 
-    .project-grid :global(.project-card:not(:last-child)) {
+    .project-grid :global(.project-card:nth-child(odd)) {
       border-right: 1px solid var(--line);
+    }
+
+    .project-grid :global(.project-card:nth-child(n + 3)) {
+      border-top: 1px solid var(--line);
     }
 
     .capability-list article {
@@ -513,6 +521,22 @@ const experiencePreview = experience
   }
 
   @media (max-width: 42rem) {
+    .hero {
+      padding-top: var(--space-6);
+    }
+
+    .hero .eyebrow {
+      margin-bottom: var(--space-4);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 11vw, 3.5rem);
+    }
+
+    .hero__aside .lede {
+      font-size: 1.15rem;
+    }
+
     .proof__grid {
       grid-template-columns: 1fr;
     }

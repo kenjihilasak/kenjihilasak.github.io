@@ -282,7 +282,8 @@ const personSchema = {
     }
 
     nav ul {
-      justify-content: space-between;
+      justify-content: flex-start;
+      gap: var(--space-4);
     }
 
     .header-contact {
@@ -300,11 +301,17 @@ const personSchema = {
     }
   }
 
-  @media (max-width: 40rem) {
-    .brand__name {
-      display: none;
+  @media (max-width: 48rem) {
+    nav a,
+    .header-contact,
+    .site-footer__bottom a {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
     }
+  }
 
+  @media (max-width: 40rem) {
     .site-footer__bottom {
       grid-template-columns: 1fr;
     }
