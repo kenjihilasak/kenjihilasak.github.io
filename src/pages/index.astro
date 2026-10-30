@@ -610,19 +610,35 @@ const experiencePreview = experience
 
   @media (max-width: 42rem) {
     .hero {
-      padding-top: var(--space-6);
+      padding-top: var(--space-5);
+    }
+
+    .hero__grid {
+      gap: var(--space-4);
     }
 
     .hero .eyebrow {
-      margin-bottom: var(--space-4);
+      margin-bottom: var(--space-3);
     }
 
     .hero h1 {
-      font-size: clamp(2.4rem, 11vw, 3.5rem);
+      max-width: none;
+      font-size: clamp(2.1rem, 9.2vw, 3rem);
     }
 
     .hero__aside .lede {
-      font-size: 1.15rem;
+      font-size: 1.02rem;
+    }
+
+    .hero__actions {
+      flex-wrap: nowrap;
+      gap: var(--space-2);
+      margin-top: var(--space-4);
+    }
+
+    .hero__actions .button {
+      padding-inline: 0.85rem;
+      white-space: nowrap;
     }
 
     .proof__grid {
@@ -644,6 +660,12 @@ const experiencePreview = experience
 
     .capability-list small {
       grid-column: auto;
+    }
+  }
+
+  @media (max-width: 22rem) {
+    .hero__actions {
+      flex-wrap: wrap;
     }
   }
 </style>
