@@ -46,13 +46,15 @@ const Heading = headingLevel;
     border: 1px solid var(--line);
     background: var(--paper);
     transition:
-      transform 180ms ease,
-      box-shadow 180ms ease;
+      transform 200ms var(--ease-out),
+      box-shadow 200ms var(--ease-out);
   }
 
-  .project-card:hover {
-    transform: translateY(-0.25rem);
-    box-shadow: 0 1.25rem 3rem rgb(17 21 19 / 8%);
+  @media (hover: hover) and (pointer: fine) {
+    .project-card:hover {
+      transform: translateY(-0.25rem);
+      box-shadow: 0 1.25rem 3rem rgb(17 21 19 / 8%);
+    }
   }
 
   .project-card__top,

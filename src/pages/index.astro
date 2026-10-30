@@ -72,7 +72,8 @@ const experiencePreview = experience
       </div>
       <div class="hero__signal" aria-hidden="true">
         <svg viewBox="0 0 600 180">
-          <path d="M0 90h82l38-44 48 89 50-89 47 89 38-45h297"></path>
+          <path d="M0 90h82l38-44 48 89 50-89 47 89 38-45h297" pathLength="1"
+          ></path>
           <circle cx="120" cy="46" r="5"></circle>
           <circle cx="168" cy="135" r="5"></circle>
           <circle cx="218" cy="46" r="5"></circle>
@@ -517,6 +518,93 @@ const experiencePreview = experience
     .about-preview__grid {
       grid-template-columns: 1fr;
       gap: var(--space-5);
+    }
+  }
+
+  .hero .eyebrow,
+  .hero h1,
+  .hero__aside,
+  .hero__status {
+    animation: hero-rise 600ms var(--ease-out) both;
+  }
+
+  .hero h1 {
+    animation-delay: 60ms;
+  }
+
+  .hero__aside {
+    animation-delay: 120ms;
+  }
+
+  .hero__status {
+    animation-delay: 180ms;
+  }
+
+  .hero__signal path {
+    stroke-dasharray: 1;
+    animation: signal-draw 1200ms var(--ease-in-out) 200ms both;
+  }
+
+  .hero__signal circle {
+    animation: signal-dot 300ms var(--ease-out) both;
+  }
+
+  .hero__signal circle:nth-of-type(1) {
+    animation-delay: 500ms;
+  }
+
+  .hero__signal circle:nth-of-type(2) {
+    animation-delay: 580ms;
+  }
+
+  .hero__signal circle:nth-of-type(3) {
+    animation-delay: 660ms;
+  }
+
+  .hero__signal circle:nth-of-type(4) {
+    animation-delay: 740ms;
+  }
+
+  .hero__signal circle:nth-of-type(5) {
+    animation-delay: 820ms;
+  }
+
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+  }
+
+  @keyframes signal-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+  }
+
+  @keyframes signal-dot {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero .eyebrow,
+    .hero h1,
+    .hero__aside,
+    .hero__status {
+      animation-name: hero-fade;
+      animation-duration: 300ms;
+    }
+
+    .hero__signal path {
+      animation: none;
+    }
+
+    @keyframes hero-fade {
+      from {
+        opacity: 0;
+      }
     }
   }
 

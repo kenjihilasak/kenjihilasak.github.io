@@ -35,6 +35,8 @@
   --space-7: 4.5rem;
   --space-8: 7rem;
   --space-9: 10rem;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --content: 78rem;
   --gutter: clamp(1.25rem, 4vw, 4rem);
 }
@@ -210,13 +212,18 @@ ul {
   transition:
     background 160ms ease,
     color 160ms ease,
-    border-color 160ms ease;
+    border-color 160ms ease,
+    transform 160ms var(--ease-out);
 }
 
 .button:hover {
   border-color: var(--brick);
   background: var(--brick);
   color: var(--white);
+}
+
+.button:active {
+  transform: scale(0.97);
 }
 
 .button--secondary {
