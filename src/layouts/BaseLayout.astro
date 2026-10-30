@@ -283,6 +283,7 @@ const personSchema = {
 
     nav ul {
       justify-content: flex-start;
+      padding-bottom: 0.75rem;
       gap: var(--space-4);
     }
 
@@ -308,6 +309,14 @@ const personSchema = {
       display: inline-flex;
       min-height: 44px;
       align-items: center;
+    }
+
+    nav ul {
+      padding-bottom: 0;
+    }
+
+    nav a::after {
+      bottom: 0.4rem;
     }
   }
 

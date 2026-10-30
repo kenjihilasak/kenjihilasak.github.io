@@ -282,6 +282,57 @@ ul {
   margin-bottom: var(--space-5);
 }
 
+.page-hero .container > *,
+.about-hero__grid > * > *,
+.case-hero__grid > div > *,
+.case-hero__grid > .lede,
+.case-hero .tag-list {
+  animation: page-rise 600ms var(--ease-out) both;
+}
+
+.page-hero .container > :nth-child(2),
+.about-hero__grid > * > :nth-child(2) {
+  animation-delay: 60ms;
+}
+
+.page-hero .container > :nth-child(3),
+.about-hero__grid > :nth-child(2) > *,
+.case-hero__grid > .lede {
+  animation-delay: 120ms;
+}
+
+.case-hero__grid > div > :nth-child(2) {
+  animation-delay: 60ms;
+}
+
+.case-hero .tag-list {
+  animation-delay: 180ms;
+}
+
+@keyframes page-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}
+
+@keyframes page-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-hero .container > *,
+  .about-hero__grid > * > *,
+  .case-hero__grid > div > *,
+  .case-hero__grid > .lede,
+  .case-hero .tag-list {
+    animation-name: page-fade;
+    animation-duration: 300ms;
+  }
+}
+
 .page-hero h1 {
   max-width: 14ch;
 }
