@@ -25,7 +25,7 @@
   --step-3: clamp(1.73rem, 1.38rem + 1.7vw, 2.8rem);
   --step-4: clamp(2.07rem, 1.47rem + 2.98vw, 4rem);
   --step-5: clamp(2.49rem, 1.49rem + 4.98vw, 5.7rem);
-  --step-6: clamp(3rem, 1.44rem + 7.75vw, 8rem);
+  --step-6: clamp(3rem, 1.8rem + 4.2vw, 5.25rem);
   --space-1: 0.35rem;
   --space-2: 0.65rem;
   --space-3: 1rem;
@@ -112,6 +112,16 @@ h3 {
 
 h1 {
   font-size: var(--step-6);
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 h2 {
@@ -266,7 +276,7 @@ ul {
 }
 
 .page-hero h1 {
-  max-width: 12ch;
+  max-width: 14ch;
 }
 
 .page-hero .lede {
