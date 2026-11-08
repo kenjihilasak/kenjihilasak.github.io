@@ -4,3 +4,6 @@ dist/
 .lighthouseci/
 .DS_Store
 *.log
+
+# Local Claude Code tooling (not part of the site)
+.claude/
