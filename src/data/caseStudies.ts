@@ -195,47 +195,43 @@ export const caseStudies: Record<string, CaseStudy> = {
   },
   "agentic-support-intelligence": {
     slug: "agentic-support-intelligence",
-    status: "Azure AI engineering · staff triage · 2026",
+    status: "Azure AI · staff triage · 2026",
     summary:
-      "A staff-facing university enquiry workbench that turns unstructured requests into a safe route, clarification request or cited draft response.",
+      "A staff workbench that sorts university enquiries and drafts a cited answer only when it is safe to do so.",
     challenge:
-      "A shared administrative team receives finance, student-record, digital-learning and sensitive-support enquiries. The system must identify intent, detect missing information and prevent sensitive cases from reaching answer generation.",
-    role: "I designed the ingestion, Azure hybrid retrieval, structured classifier, deterministic routing policy, evaluation harness, FastAPI boundary and staff review interface.",
+      "One team receives finance, student-record, IT and sensitive enquiries. Sensitive cases must never reach the AI.",
+    role: "Built it end to end: ingestion, Azure search, classifier, routing rules, evaluation, API and staff UI.",
     result:
-      "The working system indexes eight approved sources across four answerable domains. Either conservative rules or the classifier can escalate a case, while code prevents every escalated case from entering RAG generation.",
+      "Eight approved sources across four domains. Every sensitive test case was routed to a person, not the AI.",
     metrics: [
       { value: "4", label: "answerable domains" },
       { value: "21", label: "evaluated triage cases" },
       { value: "0", label: "sensitive generation leaks" },
     ],
     pipeline: [
-      "Staff enquiry",
+      "Enquiry",
       "Safety rules",
-      "Structured classification",
-      "Routing policy",
-      "Category-filtered RAG",
+      "Classification",
+      "Routing",
+      "Filtered RAG",
       "Human review",
     ],
     approach: [
       {
-        title: "Make escalation one-way",
-        text: "Rules and model classification can both escalate an enquiry. Neither can override a sensitive referral and send it to generation.",
+        title: "Escalation is one-way",
+        text: "Rules or the model can escalate a case; nothing can send a sensitive case back to the AI.",
       },
       {
         title: "Route before retrieval",
-        text: "Only answerable categories reach Azure hybrid search; the selected category becomes an enforced index filter rather than a user-controlled document choice.",
+        text: "Only answerable categories reach search, and the category limits which documents are used.",
       },
       {
-        title: "Keep staff accountable",
-        text: "Generated text is a draft with source citations. Persistence records the action and review state, while sensitive raw text is redacted.",
+        title: "Staff stay accountable",
+        text: "Answers are drafts with citations. Staff review them; sensitive text is redacted in storage.",
       },
     ],
-    findings: [
-      "The corpus separates corporate finance from operational expense guidance, avoiding retrieval from the wrong financial source.",
-      "Minerva enquiries can identify missing module, assignment and error details before staff draft a response.",
-      "Sensitive cases return a specialist route without retrieval, citations or a generated substantive answer.",
-    ],
+    findings: [],
     reflection:
-      "This is a decision-support prototype, not an autonomous case-management system. Production use would require institutional policy review, Entra-authenticated staff access, independent safety evaluation and agreed retention controls.",
+      "A decision-support prototype, not an autonomous system: staff review every draft.",
   },
 };

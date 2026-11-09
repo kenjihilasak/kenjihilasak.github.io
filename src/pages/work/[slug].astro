@@ -59,7 +59,7 @@ const publicationSchema = isAlignAndShine
     <div class="container">
       <a class="back-link" href="/work/">
         <span aria-hidden="true">←</span>
-        Selected work
+        All projects
       </a>
       <div class="case-hero__grid">
         <div>
@@ -73,6 +73,9 @@ const publicationSchema = isAlignAndShine
       </ul>
     </div>
   </header>
+
+  {isFinanceAssistant && <FinanceAssistantDemo />}
+  {isAgenticSupport && <AgenticSupportWorkbench />}
 
   <section class="section case-overview">
     <div class="container case-overview__grid">
@@ -125,16 +128,9 @@ const publicationSchema = isAlignAndShine
     </div>
   </section>
 
-  {isFinanceAssistant && <FinanceAssistantDemo />}
-  {isAgenticSupport && <AgenticSupportWorkbench />}
-
   <section class="section section--white pipeline">
     <div class="container">
-      <SectionHeading
-        eyebrow="System view"
-        title="The workflow."
-        intro="A simplified view of the stages and boundaries that shape the project."
-      />
+      <SectionHeading eyebrow="System view" title="The workflow." />
       <ol class="pipeline__flow">
         {
           study.pipeline.map((step: string, index: number) => (
@@ -153,10 +149,7 @@ const publicationSchema = isAlignAndShine
 
   <section class="section approach">
     <div class="container">
-      <SectionHeading
-        eyebrow="Approach"
-        title="Decisions that shaped the work."
-      />
+      <SectionHeading eyebrow="Approach" title="Key decisions." />
       <div class="approach__list">
         {
           study.approach.map(
@@ -173,17 +166,23 @@ const publicationSchema = isAlignAndShine
     </div>
   </section>
 
-  <section class="section section--white findings">
-    <div class="container findings__grid">
-      <div>
-        <p class="eyebrow">Findings</p>
-        <h2>What the evidence says.</h2>
-      </div>
-      <ul>
-        {study.findings.map((finding: string) => <li>{finding}</li>)}
-      </ul>
-    </div>
-  </section>
+  {
+    study.findings.length > 0 && (
+      <section class="section section--white findings">
+        <div class="container findings__grid">
+          <div>
+            <p class="eyebrow">Findings</p>
+            <h2>What the evidence says.</h2>
+          </div>
+          <ul>
+            {study.findings.map((finding: string) => (
+              <li>{finding}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
 
   {
     isAlignAndShine && (
@@ -253,8 +252,17 @@ const publicationSchema = isAlignAndShine
 </BaseLayout>
 
 <style>
+  .section {
+    padding-block: var(--space-7);
+  }
+
+  :global(.section-heading h2),
+  .findings h2 {
+    font-size: var(--step-3);
+  }
+
   .case-hero {
-    padding-block: var(--space-6) var(--space-9);
+    padding-block: var(--space-5) var(--space-6);
     border-bottom: 1px solid var(--line);
   }
 
