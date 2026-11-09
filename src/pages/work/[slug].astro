@@ -1,13 +1,11 @@
 ---
+import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ArrowIcon from "../../components/ArrowIcon.astro";
-import SectionHeading from "../../components/SectionHeading.astro";
+import AgenticSupportWorkbench from "../../components/AgenticSupportWorkbench.astro";
+import lrecImage from "../../assets/lrec-2026.jpg";
 import { projects } from "../../data/site";
 import { caseStudies } from "../../data/caseStudies";
-import lrecImage from "../../assets/lrec-2026.jpg";
-import { Image } from "astro:assets";
-import FinanceAssistantDemo from "../../components/FinanceAssistantDemo.astro";
-import AgenticSupportWorkbench from "../../components/AgenticSupportWorkbench.astro";
 
 export function getStaticPaths() {
   return projects.map((project) => ({
@@ -18,8 +16,24 @@ export function getStaticPaths() {
 
 const { project, study } = Astro.props;
 const isAlignAndShine = project.slug === "align-and-shine";
-const isFinanceAssistant = project.slug === "uol-finance-ai-assistant";
 const isAgenticSupport = project.slug === "agentic-support-intelligence";
+
+const links = [
+  project.demo && !isAgenticSupport
+    ? { label: "Live demo", href: project.demo }
+    : null,
+  project.paper ? { label: "Paper", href: project.paper } : null,
+  project.preprint ? { label: "arXiv", href: project.preprint } : null,
+  project.report ? { label: "Dissertation (PDF)", href: project.report } : null,
+  { label: "GitHub", href: project.github },
+].filter((link): link is { label: string; href: string } => Boolean(link));
+
+const overview = [
+  { label: "Problem", text: study.problem },
+  { label: "My role", text: study.role },
+  { label: "Result", text: study.result },
+];
+
 const publicationSchema = isAlignAndShine
   ? {
       "@context": "https://schema.org",
@@ -34,10 +48,6 @@ const publicationSchema = isAlignAndShine
       datePublished: "2026",
       url: project.paper,
       sameAs: project.preprint,
-      isPartOf: {
-        "@type": "PublicationVolume",
-        name: "Proceedings of the 19th Workshop on Building and Using Comparable Corpora (BUCC) at LREC 2026",
-      },
     }
   : null;
 ---
@@ -55,566 +65,313 @@ const publicationSchema = isAlignAndShine
       />
     )
   }
-  <header class="case-hero">
-    <div class="container">
-      <a class="back-link" href="/work/">
-        <span aria-hidden="true">←</span>
-        All projects
-      </a>
-      <div class="case-hero__grid">
-        <div>
-          <p class="eyebrow">{study.status}</p>
-          <h1>{project.title}</h1>
-        </div>
-        <p class="lede">{study.summary}</p>
-      </div>
+
+  <div class="container case">
+    <a class="back" href="/work/">← All projects</a>
+
+    <header class="head">
+      <p class="tag">{project.eyebrow}</p>
+      <h1 class="page-title">{project.title}</h1>
+      <p class="summary">{study.summary}</p>
       <ul class="tag-list" aria-label="Technologies">
-        {project.tags.map((tag: string) => <li>{tag}</li>)}
+        {project.tags.map((tag) => <li>{tag}</li>)}
       </ul>
-    </div>
-  </header>
-
-  {isFinanceAssistant && <FinanceAssistantDemo />}
-  {isAgenticSupport && <AgenticSupportWorkbench />}
-
-  <section class="section case-overview">
-    <div class="container case-overview__grid">
-      <article>
-        <p class="eyebrow">Challenge</p>
-        <p>{study.challenge}</p>
-      </article>
-      <article>
-        <p class="eyebrow">My role</p>
-        <p>{study.role}</p>
-      </article>
-      <article>
-        <p class="eyebrow">Outcome</p>
-        <p>{study.result}</p>
-      </article>
-    </div>
-  </section>
-
-  {
-    isAlignAndShine && (
-      <figure class="case-photo container">
-        <Image
-          src={lrecImage}
-          alt="Kenji Hilasaca standing beside the LREC 2026 welcome display in Palma"
-          widths={[640, 960, 1024]}
-          sizes="(max-width: 1120px) 100vw, 1120px"
-          format="webp"
-        />
-        <figcaption>
-          LREC 2026 in Palma, where Align and Shine was presented at the BUCC
-          workshop.
-        </figcaption>
-      </figure>
-    )
-  }
-
-  <section class="section section--teal metrics">
-    <div class="container">
-      <p class="eyebrow">At a glance</p>
-      <div class="metrics__grid">
+      <p class="links">
         {
-          study.metrics.map((metric: { value: string; label: string }) => (
-            <div>
-              <strong>{metric.value}</strong>
-              <span>{metric.label}</span>
-            </div>
+          links.map((link) => (
+            <a href={link.href}>
+              {link.label} <ArrowIcon direction="up-right" />
+            </a>
           ))
         }
-      </div>
-    </div>
-  </section>
+      </p>
+    </header>
+  </div>
 
-  <section class="section section--white pipeline">
-    <div class="container">
-      <SectionHeading eyebrow="System view" title="The workflow." />
-      <ol class="pipeline__flow">
+  {isAgenticSupport && <AgenticSupportWorkbench />}
+
+  <div class="container case">
+    <section class="cards stagger" aria-label="Overview">
+      {
+        overview.map((item) => (
+          <article class="card">
+            <h2 class="label">{item.label}</h2>
+            <p>{item.text}</p>
+          </article>
+        ))
+      }
+    </section>
+
+    <section class="metrics stagger" aria-label="Key numbers">
+      {
+        study.metrics.map((metric) => (
+          <div class="card metric">
+            <strong>{metric.value}</strong>
+            <span>{metric.label}</span>
+          </div>
+        ))
+      }
+    </section>
+
+    {
+      isAlignAndShine && (
+        <figure class="photo">
+          <Image
+            src={lrecImage}
+            alt="Kenji Hilasaca beside the LREC 2026 welcome display in Palma"
+            widths={[640, 960, 1120]}
+            sizes="(max-width: 1120px) 100vw, 1120px"
+            format="webp"
+          />
+          <figcaption>Presenting at the BUCC workshop, LREC 2026.</figcaption>
+        </figure>
+      )
+    }
+
+    <section class="block">
+      <h2 class="section-title">How it works</h2>
+      <ol class="flow">
+        {study.pipeline.map((step) => <li>{step}</li>)}
+      </ol>
+    </section>
+
+    <section class="block">
+      <h2 class="section-title">Key decisions</h2>
+      <ul class="decisions stagger">
         {
-          study.pipeline.map((step: string, index: number) => (
+          study.decisions.map((item) => (
             <li>
-              <span>0{index + 1}</span>
-              <strong>{step}</strong>
-              {index < study.pipeline.length - 1 && (
-                <ArrowIcon direction="right" />
-              )}
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
             </li>
           ))
         }
-      </ol>
-    </div>
-  </section>
+      </ul>
+    </section>
 
-  <section class="section approach">
-    <div class="container">
-      <SectionHeading eyebrow="Approach" title="Key decisions." />
-      <div class="approach__list">
-        {
-          study.approach.map(
-            (item: { title: string; text: string }, index: number) => (
-              <article>
-                <span>0{index + 1}</span>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-              </article>
-            ),
-          )
-        }
-      </div>
-    </div>
-  </section>
-
-  {
-    study.findings.length > 0 && (
-      <section class="section section--white findings">
-        <div class="container findings__grid">
-          <div>
-            <p class="eyebrow">Findings</p>
-            <h2>What the evidence says.</h2>
-          </div>
-          <ul>
-            {study.findings.map((finding: string) => (
-              <li>{finding}</li>
-            ))}
-          </ul>
-        </div>
-      </section>
-    )
-  }
-
-  {
-    isAlignAndShine && (
-      <section class="section publication">
-        <div class="container publication__grid">
-          <div>
-            <p class="eyebrow">Publication and release</p>
-            <span aria-hidden="true">LREC ’26</span>
-          </div>
-          <article>
-            <h2>
-              Align and Shine: Building High-Quality Sentence-Aligned Corpora
-              for Multilingual Text Simplification
-            </h2>
-            <p class="publication__authors">
-              Kenji Hilasaca · Nouran Khallaf · Serge Sharoff
-            </p>
-            <p>
-              Peer-reviewed paper in the official proceedings of the 19th BUCC
-              workshop at LREC 2026. The paper begins on PDF page 72 of the
-              workshop volume.
-            </p>
-            <div class="publication__links">
-              <a class="button" href={project.paper}>
-                Official proceedings
-                <ArrowIcon direction="up-right" />
-              </a>
-              <a class="button button--secondary" href={project.preprint}>
-                arXiv preprint
-                <ArrowIcon direction="up-right" />
-              </a>
-            </div>
-          </article>
-        </div>
-      </section>
-    )
-  }
-
-  <section class="section reflection">
-    <div class="narrow">
-      <p class="eyebrow">Engineering reflection</p>
-      <blockquote>{study.reflection}</blockquote>
-      <div class="case-links">
-        <a class="button" href={project.github}>
-          View repository
-          <ArrowIcon direction="up-right" />
-        </a>
-        {
-          project.demo && (
-            <a class="button button--secondary" href={project.demo}>
-              Open demo
-              <ArrowIcon direction="up-right" />
-            </a>
-          )
-        }
-        {
-          project.report && (
-            <a class="button button--secondary" href={project.report}>
-              Read MSc dissertation
-              <ArrowIcon direction="up-right" />
-            </a>
-          )
-        }
-      </div>
-    </div>
-  </section>
+    <p class="next"><strong>Next step:</strong> {study.next}</p>
+  </div>
 </BaseLayout>
 
 <style>
-  .section {
-    padding-block: var(--space-7);
+  .case {
+    padding-top: var(--space-5);
   }
 
-  :global(.section-heading h2),
-  .findings h2 {
-    font-size: var(--step-3);
+  .case + .case,
+  :global(.triage) + .case {
+    padding-top: var(--space-6);
   }
 
-  .case-hero {
-    padding-block: var(--space-5) var(--space-6);
-    border-bottom: 1px solid var(--line);
-  }
-
-  .back-link {
+  .back {
     display: inline-flex;
-    gap: 0.5rem;
+    min-height: 44px;
     align-items: center;
-    margin-bottom: var(--space-8);
-    color: var(--muted);
-    font-size: var(--step--1);
+    font-size: 0.9375rem;
     text-decoration: none;
   }
 
-  .case-hero__grid {
-    display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: var(--space-7);
-    align-items: end;
+  .head {
+    max-width: 46rem;
+    padding-bottom: var(--space-5);
   }
 
-  .case-hero .eyebrow {
-    margin-bottom: var(--space-4);
+  .tag {
+    margin: var(--space-3) 0 0.5rem;
+    color: var(--teal);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
-  .case-hero h1 {
-    max-width: 11ch;
+  .summary {
+    color: #3d4441;
+    font-size: 1.1875rem;
+    line-height: 1.55;
   }
 
-  .case-hero .lede {
-    margin: 0;
-  }
-
-  .case-hero .tag-list {
-    margin-top: var(--space-6);
-  }
-
-  .case-overview__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border-block: 1px solid var(--line);
-  }
-
-  .case-overview article {
-    padding: var(--space-5);
-    border-right: 1px solid var(--line);
-  }
-
-  .case-overview article:first-child {
-    padding-left: 0;
-  }
-
-  .case-overview article:last-child {
-    padding-right: 0;
-    border-right: 0;
-  }
-
-  .case-overview article > p:last-child {
-    margin: var(--space-5) 0 0;
-    color: var(--muted);
-  }
-
-  .case-photo {
-    margin-block: var(--space-7);
-  }
-
-  .case-photo :global(img) {
-    width: 100%;
-    aspect-ratio: auto;
-    object-fit: contain;
-  }
-
-  .case-photo figcaption {
-    margin-top: var(--space-3);
-    color: var(--muted);
-    font-size: var(--step--1);
-  }
-
-  .metrics .eyebrow {
-    margin-bottom: var(--space-6);
-  }
-
-  .metrics__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .metrics__grid div {
+  .links {
     display: flex;
-    min-height: 13rem;
-    padding: var(--space-5);
-    flex-direction: column;
-    justify-content: center;
-    border-left: 1px solid rgb(248 243 234 / 24%);
-  }
-
-  .metrics__grid div:last-child {
-    border-right: 1px solid rgb(248 243 234 / 24%);
-  }
-
-  .metrics strong {
-    color: var(--mint);
-    font-family: var(--font-serif);
-    font-size: var(--step-5);
+    flex-wrap: wrap;
+    gap: 0 1.25rem;
+    margin: var(--space-3) 0 0;
     font-weight: 500;
-    letter-spacing: -0.04em;
-    line-height: 1;
   }
 
-  .metrics span {
-    margin-top: var(--space-3);
-    color: rgb(248 243 234 / 72%);
+  .links a {
+    display: inline-flex;
+    min-height: 44px;
+    gap: 0.35rem;
+    align-items: center;
+    text-decoration: none;
   }
 
-  .pipeline__flow {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    border-block: 1px solid var(--line);
-  }
-
-  .pipeline__flow li {
-    position: relative;
-    display: flex;
-    min-height: 10rem;
+  .card {
     padding: var(--space-4);
-    flex-direction: column;
-    justify-content: space-between;
-    border-right: 1px solid var(--line);
-  }
-
-  .pipeline__flow li:first-child {
-    border-left: 1px solid var(--line);
-  }
-
-  .pipeline__flow li > span {
-    color: var(--brick);
-    font-size: var(--step--1);
-    font-weight: 600;
-  }
-
-  .pipeline__flow strong {
-    font-size: var(--step--1);
-    font-weight: 600;
-    line-height: 1.35;
-  }
-
-  .pipeline__flow :global(svg) {
-    position: absolute;
-    z-index: 1;
-    top: 50%;
-    right: -0.55rem;
-    padding: 0.15rem;
+    border: 1px solid var(--line-solid);
+    border-radius: 8px;
     background: var(--white);
-    color: var(--teal);
   }
 
-  .approach__list {
-    border-top: 1px solid var(--line);
-  }
-
-  .approach article {
+  .cards,
+  .metrics {
     display: grid;
-    grid-template-columns: 0.18fr 0.7fr 1fr;
-    padding-block: var(--space-5);
-    border-bottom: 1px solid var(--line);
-    gap: var(--space-5);
-    align-items: start;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
   }
 
-  .approach article > span {
-    color: var(--brick);
-    font-size: var(--step--1);
+  .metrics {
+    margin-top: var(--space-4);
+  }
+
+  .label {
+    margin-bottom: 0.5rem;
+    color: var(--teal);
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
     font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
-  .approach h3 {
-    font-size: var(--step-2);
-  }
-
-  .approach p {
+  .card p {
     margin: 0;
-    color: var(--muted);
+    color: #3d4441;
+    font-size: 0.9375rem;
+    line-height: 1.6;
   }
 
-  .findings__grid {
-    display: grid;
-    grid-template-columns: 0.7fr 1.3fr;
-    gap: var(--space-8);
-  }
-
-  .findings h2 {
-    max-width: 12ch;
-    margin-top: var(--space-5);
-    font-size: var(--step-4);
-  }
-
-  .findings ul {
-    border-top: 1px solid var(--line);
-  }
-
-  .findings li {
-    position: relative;
-    padding: var(--space-5) 0 var(--space-5) var(--space-6);
-    border-bottom: 1px solid var(--line);
-    color: var(--muted);
-  }
-
-  .findings li::before {
-    position: absolute;
-    top: var(--space-5);
-    left: 0;
-    color: var(--teal);
-    content: "◆";
-    font-size: 0.65rem;
-  }
-
-  .publication__grid {
-    display: grid;
-    grid-template-columns: 0.38fr 1fr;
-    gap: var(--space-8);
-  }
-
-  .publication__grid > div > span {
+  .metric strong {
     display: block;
-    margin-top: var(--space-6);
-    color: var(--brick);
-    font-family: var(--font-serif);
-    font-size: var(--step-5);
-    line-height: 1;
-  }
-
-  .publication h2 {
-    max-width: 24ch;
-    font-size: var(--step-3);
-  }
-
-  .publication__authors {
     color: var(--teal);
-    font-size: var(--step--1);
+    font-family: var(--font-serif);
+    font-size: 2.25rem;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  .metric span {
+    color: var(--muted);
+    font-size: 0.9375rem;
+  }
+
+  .photo {
+    margin: var(--space-6) 0 0;
+  }
+
+  .photo :global(img) {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  .photo figcaption {
+    margin-top: 0.5rem;
+    color: var(--muted);
+    font-size: 0.875rem;
+  }
+
+  .block {
+    margin-top: var(--space-6);
+  }
+
+  .section-title {
+    margin-bottom: var(--space-3);
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .flow li {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    counter-increment: step;
+  }
+
+  .flow li {
+    padding: 0.5rem 0.875rem;
+    border: 1px solid var(--line-solid);
+    border-radius: 999px;
+    background: var(--white);
+  }
+
+  .flow li::before {
+    color: var(--teal);
+    content: counter(step);
     font-weight: 600;
   }
 
-  .publication article > p:not(.publication__authors) {
-    max-width: 44rem;
-    color: var(--muted);
+  .decisions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
   }
 
-  .publication__links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-    margin-top: var(--space-5);
+  .decisions li {
+    padding-top: var(--space-3);
+    border-top: 2px solid var(--teal);
   }
 
-  .reflection blockquote {
-    margin: var(--space-5) 0 0;
-    padding: 0;
-    border: 0;
+  .decisions h3 {
+    margin-bottom: 0.375rem;
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.4;
+  }
+
+  .decisions p {
+    margin: 0;
+    color: #3d4441;
+    font-size: 0.9375rem;
+  }
+
+  .next {
+    margin: var(--space-6) 0 0;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line-solid);
+    color: #3d4441;
+  }
+
+  .next strong {
     color: var(--ink);
-    font-family: var(--font-serif);
-    font-size: var(--step-3);
-    letter-spacing: -0.025em;
-    line-height: 1.25;
   }
 
-  .case-links {
-    display: flex;
-    flex-wrap: wrap;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-    margin-top: var(--space-6);
-  }
-
-  @media (max-width: 64rem) {
-    .case-hero__grid,
-    .findings__grid,
-    .publication__grid {
+  @media (max-width: 52rem) {
+    .cards,
+    .decisions {
       grid-template-columns: 1fr;
     }
 
-    .case-overview__grid {
-      grid-template-columns: 1fr;
+    .metrics {
+      gap: 0.5rem;
     }
 
-    .case-overview article,
-    .case-overview article:first-child,
-    .case-overview article:last-child {
-      padding: var(--space-5) 0;
-      border-right: 0;
-      border-bottom: 1px solid var(--line);
+    .metric {
+      padding: var(--space-3) 0.75rem;
     }
 
-    .pipeline__flow {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  @media (max-width: 42rem) {
-    .case-hero {
-      padding-block: var(--hero-pad-top) var(--hero-pad-bottom);
+    .metric strong {
+      font-size: 1.375rem;
     }
 
-    .back-link {
-      margin-bottom: var(--space-5);
-    }
-
-    .case-hero__grid {
-      gap: var(--space-4);
-    }
-
-    .case-hero .eyebrow {
-      margin-bottom: var(--hero-eyebrow-gap);
-    }
-
-    .case-hero h1 {
-      max-width: none;
-    }
-
-    .case-hero .lede {
-      font-size: var(--hero-lede);
-    }
-
-    .case-hero .tag-list {
-      margin-top: var(--space-4);
-    }
-  }
-
-  @media (max-width: 45rem) {
-    .metrics__grid,
-    .pipeline__flow {
-      grid-template-columns: 1fr;
-    }
-
-    .metrics__grid div,
-    .metrics__grid div:last-child {
-      min-height: 9rem;
-      border-right: 1px solid rgb(248 243 234 / 24%);
-      border-bottom: 1px solid rgb(248 243 234 / 24%);
-    }
-
-    .pipeline__flow li {
-      min-height: 7rem;
-      border-left: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .pipeline__flow :global(svg) {
-      display: none;
-    }
-
-    .approach article {
-      grid-template-columns: 1fr;
-      gap: var(--space-3);
+    .metric span {
+      font-size: 0.8125rem;
     }
   }
 </style>

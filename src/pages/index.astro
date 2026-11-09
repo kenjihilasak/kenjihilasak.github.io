@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Icon from "../components/Icon.astro";
 import ProjectCard from "../components/ProjectCard.astro";
-import profileImage from "../assets/kenji-profile.jpg";
+import profileImage from "../assets/kenji-profile-square.jpg";
 import { projects, site } from "../data/site";
 
 const featured = projects.filter((project) => project.featured);
@@ -25,7 +25,7 @@ const links = [
           alt={site.name}
           width={220}
           height={220}
-          densities={[1, 2]}
+          densities={[1, 2, 3]}
           format="webp"
           loading="eager"
         />
@@ -90,7 +90,7 @@ const links = [
         <h2 id="selected-work">Selected work</h2>
         <a href="/work/">All projects →</a>
       </div>
-      <div class="selected__grid">
+      <div class="selected__grid stagger">
         {featured.map((project) => <ProjectCard project={project} />)}
       </div>
     </section>
@@ -121,7 +121,7 @@ const links = [
     height: 220px;
     border-radius: 50%;
     object-fit: cover;
-    object-position: 50% 18%;
+    object-position: 50% 40%;
   }
 
   .profile__name {

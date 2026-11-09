@@ -21,7 +21,7 @@ const orderedProjects = [...projects].sort(
 >
   <div class="container page">
     <h1 class="page-title">Projects</h1>
-    <div class="projects">
+    <div class="projects stagger">
       {
         orderedProjects.map((project) => (
           <ProjectCard project={project} variant="full" headingLevel="h2" />
