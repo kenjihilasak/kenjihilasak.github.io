@@ -6,7 +6,16 @@ import ProjectCard from "../components/ProjectCard.astro";
 import profileImage from "../assets/kenji-profile-square.jpg";
 import { projects, site } from "../data/site";
 
-const featured = projects.filter((project) => project.featured);
+const featuredOrder = [
+  "agentic-support-intelligence",
+  "align-and-shine",
+  "exchange-rate-forecasting",
+];
+const featured = projects
+  .filter((project) => project.featured)
+  .sort(
+    (a, b) => featuredOrder.indexOf(a.slug) - featuredOrder.indexOf(b.slug),
+  );
 const links = [
   { href: `mailto:${site.email}`, label: "Email", icon: "mail" },
   { href: site.linkedin, label: "LinkedIn", icon: "linkedin" },
