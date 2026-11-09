@@ -7,6 +7,7 @@ export default defineConfig({
   output: "static",
   redirects: {
     "/research": "/work/align-and-shine/",
+    "/about": "/",
   },
   build: {
     format: "directory",

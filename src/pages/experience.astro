@@ -1,317 +1,127 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import ArrowIcon from "../components/ArrowIcon.astro";
-import SectionHeading from "../components/SectionHeading.astro";
-import graduationImage from "../assets/graduation-leeds.jpg";
-import { Image } from "astro:assets";
-import { experience, site } from "../data/site";
+import Icon from "../components/Icon.astro";
+import { education, experience, site } from "../data/site";
 ---
 
 <BaseLayout
   title="Experience — Kenji Hilasaca"
   description="Kenji Hilasaca's experience across data engineering, applied machine learning, banking, consulting and software delivery."
 >
-  <header class="page-hero">
-    <div class="container">
-      <p class="eyebrow">Experience</p>
-      <h1>Data and AI systems built around real outcomes.</h1>
-      <p class="lede">
-        Six years across banking, consulting, software and applied NLP—from
-        distributed pipelines and APIs to model evaluation and multilingual data
-        products.
-      </p>
+  <div class="container page">
+    <div class="page__head">
+      <h1 class="page-title">Experience</h1>
+      <a class="cv" href={site.cv}><Icon name="file-text" /> Download CV</a>
     </div>
-  </header>
 
-  <section class="section section--white">
-    <div class="container timeline">
+    <ol class="timeline">
       {
-        experience.map((item, index) => (
-          <article class="timeline__item">
-            <div class="timeline__meta">
-              <span>0{index + 1}</span>
-              <p>{item.period}</p>
-            </div>
-            <div class="timeline__title">
-              <h2>{item.role}</h2>
-              <p>{item.organisation}</p>
-            </div>
-            <div class="timeline__copy">
-              <p>{item.summary}</p>
+        experience.map((item) => (
+          <li class="entry">
+            <p class="entry__period">{item.period}</p>
+            <div>
+              <h2 class="entry__role">{item.role}</h2>
+              <p class="entry__org">{item.organisation}</p>
+              <p class="entry__summary">{item.summary}</p>
               <ul class="tag-list" aria-label="Skills">
                 {item.tags.map((tag) => (
                   <li>{tag}</li>
                 ))}
               </ul>
             </div>
-          </article>
+          </li>
         ))
       }
-    </div>
-  </section>
+    </ol>
 
-  <section class="section impact">
-    <div class="container">
-      <SectionHeading
-        eyebrow="Selected impact"
-        title="Measured improvements, with context."
-        intro="Public figures are limited to claims that can be explained clearly in an interview."
-      />
-      <div class="impact__grid">
-        <article>
-          <strong>50%</strong>
-          <p>
-            Reduced processing latency in distributed corporate-banking data
-            workflows.
-          </p>
-        </article>
-        <article>
-          <strong>48 → 6 hours</strong>
-          <p>
-            Reduced a core multilingual data-workflow runtime on shared Linux
-            and GPU infrastructure.
-          </p>
-        </article>
-        <article>
-          <strong>5 languages</strong>
-          <p>
-            Contributed data infrastructure for an open multilingual
-            text-simplification corpus.
-          </p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section education">
-    <div class="container">
-      <SectionHeading
-        eyebrow="Education"
-        title="Foundations and progression."
-      />
-      <div class="education__grid">
-        <div>
-          <div class="education__list">
-            <article>
-              <p>2024 — 2025 · United Kingdom</p>
-              <h3>MSc Data Science & Analytics · Distinction</h3>
-              <span>University of Leeds</span>
-            </article>
-            <article>
-              <p>2022 — 2023 · Remote</p>
-              <h3>MicroMasters programme · Statistics and Data Science</h3>
-              <span>MITx</span>
-            </article>
-            <article>
-              <p>2010 — 2016 · Peru</p>
-              <h3>BSc Mechatronic Engineering</h3>
-              <span>National University of Engineering</span>
-            </article>
-          </div>
-          <a class="button button--secondary" href={site.cv}>
-            Download full CV
-            <ArrowIcon direction="up-right" />
-          </a>
-        </div>
-        <figure class="education__photo">
-          <Image
-            src={graduationImage}
-            alt="Kenji Hilasaca in graduation robes outside the University of Leeds Great Hall"
-            widths={[440, 720, 960]}
-            sizes="(max-width: 800px) 100vw, 35vw"
-            format="webp"
-          />
-          <figcaption>
-            MSc Data Science & Analytics with Distinction, University of Leeds,
-            2025.
-          </figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
+    <h2 class="section-title">Education</h2>
+    <ol class="timeline">
+      {
+        education.map((item) => (
+          <li class="entry">
+            <p class="entry__period">{item.period}</p>
+            <div>
+              <h3 class="entry__role">{item.degree}</h3>
+              <p class="entry__org">{item.institution}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
 </BaseLayout>
 
 <style>
-  .timeline__item {
-    display: grid;
-    grid-template-columns: 0.35fr 0.85fr 1fr;
-    padding-block: var(--space-6);
-    border-top: 1px solid var(--line);
-    gap: var(--space-6);
+  .page {
+    max-width: 52rem;
+    padding-block: var(--space-7) var(--space-6);
   }
 
-  .timeline__item:last-child {
-    border-bottom: 1px solid var(--line);
-  }
-
-  .timeline__meta {
+  .page__head {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: baseline;
     justify-content: space-between;
   }
 
-  .timeline__meta > span {
-    color: var(--brick);
-    font-size: var(--step--1);
+  .cv {
+    display: inline-flex;
+    min-height: 44px;
+    gap: 0.5rem;
+    align-items: center;
     font-weight: 600;
   }
 
-  .timeline__meta p,
-  .timeline__title p {
+  .timeline {
     margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .entry {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: var(--space-4);
+    padding-block: var(--space-4);
+    border-top: 1px solid var(--line-solid);
+  }
+
+  .entry__period {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9375rem;
+  }
+
+  .entry__role {
+    font-family: var(--font-sans);
+    font-size: 1.1875rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.4;
+  }
+
+  .entry__org {
+    margin: 0.125rem 0 0.75rem;
     color: var(--teal);
-    font-size: var(--step--1);
     font-weight: 500;
   }
 
-  .timeline__title h2 {
-    margin-bottom: var(--space-3);
-    font-size: var(--step-3);
+  .entry__summary {
+    color: #3d4441;
   }
 
-  .timeline__copy > p {
-    color: var(--muted);
+  .section-title {
+    margin: var(--space-6) 0 var(--space-3);
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
-  .timeline__copy .tag-list {
-    margin-top: var(--space-4);
-  }
-
-  .impact__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border-block: 1px solid var(--line);
-  }
-
-  .impact article {
-    min-height: 17rem;
-    padding: var(--space-5);
-    border-right: 1px solid var(--line);
-  }
-
-  .impact article:first-child {
-    padding-left: 0;
-  }
-
-  .impact article:last-child {
-    padding-right: 0;
-    border-right: 0;
-  }
-
-  .impact strong {
-    display: block;
-    margin-bottom: var(--space-6);
-    color: var(--teal);
-    font-family: var(--font-serif);
-    font-size: var(--step-4);
-    font-weight: 500;
-    letter-spacing: -0.04em;
-    line-height: 1;
-  }
-
-  .impact p {
-    max-width: 18rem;
-    color: var(--muted);
-  }
-
-  .education__grid {
-    display: grid;
-    grid-template-columns: 1.35fr 0.65fr;
-    gap: var(--space-8);
-    align-items: start;
-  }
-
-  .education__list {
-    margin-bottom: var(--space-6);
-    border-top: 1px solid var(--line);
-  }
-
-  .education__list article {
-    display: grid;
-    grid-template-columns: 0.45fr 1fr 0.55fr;
-    padding-block: var(--space-5);
-    border-bottom: 1px solid var(--line);
-    gap: var(--space-5);
-    align-items: baseline;
-  }
-
-  .education__list p,
-  .education__list span {
-    margin: 0;
-    color: var(--muted);
-    font-size: var(--step--1);
-  }
-
-  .education__list h3 {
-    font-size: var(--step-2);
-  }
-
-  .education__photo :global(img) {
-    width: 100%;
-    height: 34rem;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    object-position: 50% 38%;
-  }
-
-  .education__photo figcaption {
-    margin-top: var(--space-3);
-    color: var(--muted);
-    font-size: var(--step--1);
-  }
-
-  @media (max-width: 62rem) {
-    .timeline__item {
-      grid-template-columns: 0.3fr 1fr;
-    }
-
-    .timeline__copy {
-      grid-column: 2;
-    }
-
-    .education__list article {
+  @media (max-width: 40rem) {
+    .entry {
       grid-template-columns: 1fr;
-      gap: var(--space-2);
-    }
-
-    .education__grid {
-      grid-template-columns: 1fr;
-    }
-
-    .education__photo {
-      max-width: 34rem;
-    }
-
-    .education__photo :global(img) {
-      height: min(120vw, 34rem);
-    }
-  }
-
-  @media (max-width: 42rem) {
-    .timeline__item {
-      grid-template-columns: 1fr;
-      gap: var(--space-4);
-    }
-
-    .timeline__meta {
-      flex-direction: row;
-    }
-
-    .timeline__copy {
-      grid-column: auto;
-    }
-
-    .impact__grid {
-      grid-template-columns: 1fr;
-    }
-
-    .impact article,
-    .impact article:first-child,
-    .impact article:last-child {
-      min-height: auto;
-      padding: var(--space-5) 0;
-      border-right: 0;
-      border-bottom: 1px solid var(--line);
+      gap: 0.25rem;
     }
   }
 </style>

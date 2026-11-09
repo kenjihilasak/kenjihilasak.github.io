@@ -1,670 +1,230 @@
 ---
+import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import ArrowIcon from "../components/ArrowIcon.astro";
+import Icon from "../components/Icon.astro";
 import ProjectCard from "../components/ProjectCard.astro";
-import SectionHeading from "../components/SectionHeading.astro";
-import { capabilities, experience, projects, site } from "../data/site";
+import profileImage from "../assets/kenji-profile.jpg";
+import { projects, site } from "../data/site";
 
-const featuredOrder = [
-  "agentic-support-intelligence",
-  "align-and-shine",
-  "late-refill-risk",
-  "exchange-rate-forecasting",
-];
-const featuredProjects = projects
-  .filter((project) => project.featured)
-  .sort(
-    (first, second) =>
-      featuredOrder.indexOf(first.slug) - featuredOrder.indexOf(second.slug),
-  );
-const experienceOrder = ["University of Leeds", "BBVA", "INDRA"];
-const experiencePreview = experience
-  .filter((item) =>
-    experienceOrder.some((organisation) =>
-      item.organisation.startsWith(organisation),
-    ),
-  )
-  .sort(
-    (first, second) =>
-      experienceOrder.findIndex((organisation) =>
-        first.organisation.startsWith(organisation),
-      ) -
-      experienceOrder.findIndex((organisation) =>
-        second.organisation.startsWith(organisation),
-      ),
-  );
+const featured = projects.filter((project) => project.featured);
+const links = [
+  { href: `mailto:${site.email}`, label: "Email", icon: "mail" },
+  { href: site.linkedin, label: "LinkedIn", icon: "linkedin" },
+  { href: site.github, label: "GitHub", icon: "github" },
+  { href: site.cv, label: "CV (PDF)", icon: "file-text", strong: true },
+] as const;
 ---
 
 <BaseLayout>
-  <section class="hero">
-    <div class="container hero__grid">
-      <div class="hero__intro">
-        <p class="eyebrow">Data & AI Engineer · Leeds, UK</p>
-        <h1>
-          I build reliable data and AI systems for <em>real-world decisions.</em
-          >
-        </h1>
-      </div>
-      <div class="hero__aside">
-        <p class="lede">
-          Data pipelines, machine-learning workflows and applied AI—designed
-          around measurable outcomes, reproducibility and production
-          constraints.
-        </p>
-        <div class="hero__actions">
-          <a class="button" href="#selected-work">
-            Explore selected work
-            <ArrowIcon direction="down" />
-          </a>
-          <a class="button button--secondary" href={site.cv}>
-            Download CV
-            <ArrowIcon direction="up-right" />
-          </a>
+  <div class="container home">
+    <section class="intro">
+      <aside class="profile">
+        <Image
+          class="profile__photo"
+          src={profileImage}
+          alt={site.name}
+          width={220}
+          height={220}
+          densities={[1, 2]}
+          format="webp"
+          loading="eager"
+        />
+        <div>
+          <h1 class="profile__name">{site.name}</h1>
+          <p class="profile__role">{site.role} · {site.locationShort}</p>
+        </div>
+        <ul class="profile__links">
+          {
+            links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class:list={{ strong: "strong" in link && link.strong }}
+                >
+                  <Icon name={link.icon} />
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </aside>
+
+      <div class="about">
+        <p class="about__roles">{site.rolesLine}</p>
+        <div class="bio">
+          <p>
+            I'm a data and AI engineer focused on reliable data pipelines,
+            applied machine learning and multilingual NLP. As a Research
+            Assistant at the University of Leeds, I build GPU-backed pipelines
+            for multilingual corpora, including <a href="/work/align-and-shine/"
+              >Align and Shine</a
+            >, published at <a href="/publications/">LREC 2026</a>.
+          </p>
+          <p>
+            I hold an MSc in Data Science &amp; Analytics with Distinction from
+            Leeds and a BSc in Mechatronic Engineering from UNI in Peru. My path
+            to data wasn't linear: I co-founded <a href="/experience/"
+              >PlayTec</a
+            >, a software and tech-education company, then moved into analytics
+            at INDRA and data engineering for corporate banking at <a
+              href="/experience/">BBVA</a
+            >. Building products taught me to start from the problem, not the
+            tool.
+          </p>
+          <p>
+            Outside of work, I was part of the winning team at Peru's Mining
+            &amp; Energy Hackathon, competed in the ARLISS student satellite
+            challenge, and still play folk music from Juliaca.
+          </p>
+          <p>
+            Open to Data Engineering, ML Engineering and applied AI roles in the
+            UK. Connect with me on <a href={site.linkedin}>LinkedIn</a>.
+          </p>
         </div>
       </div>
-      <div class="hero__status">
-        <span class="status-dot" aria-hidden="true"></span>
-        <p>
-          Based in Leeds, with 6+ years across banking, consulting, software and
-          applied NLP. Open to Data Engineering, ML Engineering and applied AI
-          roles.
-        </p>
-      </div>
-      <div class="hero__signal" aria-hidden="true">
-        <svg viewBox="0 0 600 180">
-          <path d="M0 90h82l38-44 48 89 50-89 47 89 38-45h297" pathLength="1"
-          ></path>
-          <circle cx="120" cy="46" r="5"></circle>
-          <circle cx="168" cy="135" r="5"></circle>
-          <circle cx="218" cy="46" r="5"></circle>
-          <circle cx="265" cy="135" r="5"></circle>
-          <circle cx="303" cy="90" r="5"></circle>
-        </svg>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="proof" aria-label="Professional highlights">
-    <div class="container proof__grid">
-      <div>
-        <strong>6+</strong>
-        <span>years delivering data and software systems</span>
+    <section class="selected" aria-labelledby="selected-work">
+      <div class="selected__head">
+        <h2 id="selected-work">Selected work</h2>
+        <a href="/work/">All projects →</a>
       </div>
-      <div>
-        <strong>50%</strong>
-        <span>lower processing latency in corporate banking</span>
+      <div class="selected__grid">
+        {featured.map((project) => <ProjectCard project={project} />)}
       </div>
-      <div>
-        <strong>48 → 6h</strong>
-        <span>core data-workflow runtime</span>
-      </div>
-      <div>
-        <strong>Distinction</strong>
-        <span>MSc Data Science & Analytics</span>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--white" id="selected-work">
-    <div class="container">
-      <SectionHeading
-        eyebrow="Selected work"
-        title="Evidence, not just a list of tools."
-        intro="Each project starts with a concrete problem, makes the technical decisions visible and links to the underlying work."
-      />
-      <div class="project-grid">
-        {
-          featuredProjects.map((project, index) => (
-            <ProjectCard project={project} index={index} />
-          ))
-        }
-      </div>
-      <a class="text-link" href="/work/">
-        View all projects
-        <ArrowIcon />
-      </a>
-    </div>
-  </section>
-
-  <section class="section expertise">
-    <div class="container">
-      <SectionHeading
-        eyebrow="How I work"
-        title="From raw data to reliable decisions."
-        intro="I combine engineering discipline, statistical thinking and clear communication across the full lifecycle."
-      />
-      <div class="capability-list">
-        {
-          capabilities.map((capability) => (
-            <article>
-              <span>{capability.number}</span>
-              <h3>{capability.title}</h3>
-              <p>{capability.text}</p>
-              <small>{capability.tools}</small>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--teal experience-preview">
-    <div class="container">
-      <SectionHeading
-        eyebrow="Experience"
-        title="Experience where data has to work."
-        intro="Banking, consulting, software and applied AI—connected by a focus on dependable systems and useful decisions."
-      />
-      <div class="experience-preview__grid">
-        {
-          experiencePreview.map((item) => (
-            <article>
-              <p class="experience-preview__period">{item.period}</p>
-              <h3>{item.role}</h3>
-              <p class="experience-preview__org">{item.organisation}</p>
-              <p>{item.summary}</p>
-            </article>
-          ))
-        }
-      </div>
-      <a class="text-link text-link--light" href="/experience/">
-        Full experience
-        <ArrowIcon />
-      </a>
-    </div>
-  </section>
-
-  <section class="section section--white about-preview">
-    <div class="container about-preview__grid">
-      <div class="about-preview__label">
-        <p class="eyebrow">Beyond the code</p>
-        <span aria-hidden="true">PE → BR → UK</span>
-      </div>
-      <div>
-        <h2>A path through engineering, entrepreneurship and data.</h2>
-        <p class="lede">
-          From mechatronics and product-building in Peru to financial data
-          systems and applied AI in Leeds.
-        </p>
-        <a class="text-link" href="/about/">
-          Read my story
-          <ArrowIcon />
-        </a>
-      </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </BaseLayout>
 
 <style>
-  .hero {
-    padding-block: clamp(5rem, 10vw, 9rem) var(--space-7);
-    overflow: hidden;
+  .home {
+    padding-block: var(--space-7) var(--space-6);
   }
 
-  .hero__grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.6fr);
-    gap: var(--space-6);
-    align-items: end;
-  }
-
-  .hero__intro {
-    position: relative;
-    z-index: 1;
-  }
-
-  .hero .eyebrow {
-    margin-bottom: var(--space-5);
-  }
-
-  .hero h1 {
-    max-width: 13ch;
-  }
-
-  .hero h1 em {
-    color: var(--teal);
-    font-weight: inherit;
-  }
-
-  .hero__aside {
-    padding-bottom: 0.4rem;
-  }
-
-  .hero__aside .lede {
-    color: var(--ink);
-  }
-
-  .hero__actions {
+  .intro {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-3);
-    margin-top: var(--space-5);
+    gap: var(--space-7);
   }
 
-  .hero__status {
+  .profile {
     display: flex;
-    max-width: 35rem;
-    gap: var(--space-3);
-    align-items: flex-start;
-    font-size: var(--step--1);
-  }
-
-  .hero__status p {
-    margin: 0;
-  }
-
-  .status-dot {
-    width: 0.7rem;
-    height: 0.7rem;
-    flex: 0 0 auto;
-    margin-top: 0.38rem;
-    border-radius: 50%;
-    background: var(--brick);
-    box-shadow: 0 0 0 0.3rem rgb(182 65 58 / 14%);
-  }
-
-  .hero__signal {
-    align-self: center;
-    color: var(--teal);
-  }
-
-  .hero__signal svg {
-    width: 100%;
-    overflow: visible;
-  }
-
-  .hero__signal path,
-  .hero__signal circle {
-    fill: var(--paper);
-    stroke: currentColor;
-    stroke-width: 2;
-    vector-effect: non-scaling-stroke;
-  }
-
-  .hero__signal path {
-    fill: none;
-    opacity: 0.5;
-  }
-
-  .proof {
-    border-block: 1px solid var(--line);
-    background: var(--paper-deep);
-  }
-
-  .proof__grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .proof__grid div {
-    display: flex;
-    min-height: 9.5rem;
-    padding: var(--space-4);
+    flex: 1 1 240px;
     flex-direction: column;
-    justify-content: center;
-    border-left: 1px solid var(--line);
+    gap: 1.25rem;
+    max-width: 260px;
   }
 
-  .proof__grid div:last-child {
-    border-right: 1px solid var(--line);
+  .profile :global(.profile__photo) {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: 50% 18%;
   }
 
-  .proof strong {
-    color: var(--teal);
-    font-family: var(--font-serif);
-    font-size: var(--step-3);
-    font-weight: 500;
-    letter-spacing: -0.04em;
-  }
-
-  .proof span {
-    max-width: 13rem;
-    margin-top: 0.35rem;
-    color: var(--muted);
-    font-size: var(--step--1);
-    line-height: 1.4;
-  }
-
-  .project-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .project-grid :global(.project-card:nth-child(odd)) {
-    border-right: 0;
-  }
-
-  .project-grid :global(.project-card:nth-child(n + 3)) {
-    border-top: 0;
-  }
-
-  .text-link {
-    display: inline-flex;
-    gap: 0.45rem;
-    align-items: center;
-    margin-top: var(--space-6);
-    color: var(--ink);
+  .profile__name {
+    font-size: 1.5rem;
     font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  .profile__role {
+    margin: 0.25rem 0 0;
+    color: var(--muted);
+    font-size: 0.9375rem;
+  }
+
+  .profile__links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.9375rem;
+  }
+
+  .profile__links a {
+    display: flex;
+    min-height: 36px;
+    gap: 0.625rem;
+    align-items: center;
     text-decoration: none;
   }
 
-  .text-link:hover {
-    color: var(--brick);
+  .profile__links a:hover {
+    text-decoration: underline;
   }
 
-  .capability-list {
-    border-top: 1px solid var(--line);
+  .profile__links .strong {
+    font-weight: 600;
   }
 
-  .capability-list article {
-    display: grid;
-    grid-template-columns: 0.18fr 0.5fr 1fr 0.7fr;
-    padding-block: var(--space-5);
-    border-bottom: 1px solid var(--line);
-    gap: var(--space-5);
+  .about {
+    flex: 999 1 520px;
+    min-width: 0;
+    max-width: 680px;
+  }
+
+  .about__roles {
+    margin-bottom: var(--space-5);
+    color: #3d4441;
+    font-size: 1.1875rem;
+    line-height: 1.5;
+  }
+
+  .selected {
+    margin-top: var(--space-8);
+  }
+
+  .selected__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
     align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: var(--space-4);
   }
 
-  .capability-list article > span {
-    color: var(--brick);
-    font-size: var(--step--1);
+  .selected__head h2 {
+    font-size: 1.75rem;
     font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
-  .capability-list h3 {
-    font-size: var(--step-2);
+  .selected__head a {
+    font-size: 0.9375rem;
+    font-weight: 500;
   }
 
-  .capability-list p {
-    margin: 0;
-    color: var(--muted);
-  }
-
-  .capability-list small {
-    color: var(--teal);
-    font-size: var(--step--1);
-  }
-
-  .experience-preview__grid {
+  .selected__grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border-top: 1px solid rgb(248 243 234 / 24%);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
   }
 
-  .experience-preview__grid article {
-    padding: var(--space-5);
-    border-right: 1px solid rgb(248 243 234 / 24%);
-  }
-
-  .experience-preview__grid article:first-child {
-    padding-left: 0;
-  }
-
-  .experience-preview__grid article:last-child {
-    padding-right: 0;
-    border-right: 0;
-  }
-
-  .experience-preview__period,
-  .experience-preview__org {
-    color: var(--mint);
-    font-size: var(--step--1);
-  }
-
-  .experience-preview h3 {
-    min-height: 5.5rem;
-    margin-bottom: var(--space-3);
-    font-size: var(--step-2);
-  }
-
-  .experience-preview__grid article > p:last-child {
-    color: rgb(248 243 234 / 74%);
-  }
-
-  .text-link--light {
-    color: var(--paper);
-  }
-
-  .text-link--light:hover {
-    color: var(--mint);
-  }
-
-  .about-preview__grid {
-    display: grid;
-    grid-template-columns: 0.38fr 1fr;
-    gap: var(--space-8);
-  }
-
-  .about-preview__label span {
-    display: block;
-    margin-top: var(--space-5);
-    color: var(--brick);
-    font-size: var(--step-1);
-    font-weight: 600;
-    letter-spacing: 0.05em;
-  }
-
-  .about-preview h2 {
-    max-width: 16ch;
-    font-size: var(--step-4);
-  }
-
-  .about-preview .lede {
-    margin-top: var(--space-5);
-  }
-
-  @media (max-width: 64rem) {
-    .hero__grid {
+  @media (max-width: 60rem) {
+    .selected__grid {
       grid-template-columns: 1fr;
     }
+  }
 
-    .hero__aside {
-      max-width: 42rem;
+  @media (max-width: 40rem) {
+    .home {
+      padding-top: var(--space-5);
     }
 
-    .hero__signal {
-      display: none;
-    }
-
-    .proof__grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .proof__grid div:nth-child(2) {
-      border-right: 1px solid var(--line);
-    }
-
-    .proof__grid div:nth-child(-n + 2) {
-      border-bottom: 1px solid var(--line);
-    }
-
-    .project-grid {
-      grid-template-columns: 1fr;
-      gap: var(--space-4);
-    }
-
-    .project-grid :global(.project-card:nth-child(odd)) {
-      border-right: 1px solid var(--line);
-    }
-
-    .project-grid :global(.project-card:nth-child(n + 3)) {
-      border-top: 1px solid var(--line);
-    }
-
-    .capability-list article {
-      grid-template-columns: 0.15fr 0.55fr 1.3fr;
-    }
-
-    .capability-list small {
-      grid-column: 2 / -1;
-    }
-
-    .experience-preview__grid {
-      grid-template-columns: 1fr;
-    }
-
-    .experience-preview__grid article,
-    .experience-preview__grid article:first-child,
-    .experience-preview__grid article:last-child {
-      padding: var(--space-5) 0;
-      border-right: 0;
-      border-bottom: 1px solid rgb(248 243 234 / 24%);
-    }
-
-    .experience-preview h3 {
-      min-height: auto;
-    }
-
-    .about-preview__grid {
-      grid-template-columns: 1fr;
+    .intro {
       gap: var(--space-5);
     }
-  }
 
-  .hero .eyebrow,
-  .hero h1,
-  .hero__aside,
-  .hero__status {
-    animation: hero-rise 600ms var(--ease-out) both;
-  }
-
-  .hero h1 {
-    animation-delay: 60ms;
-  }
-
-  .hero__aside {
-    animation-delay: 120ms;
-  }
-
-  .hero__status {
-    animation-delay: 180ms;
-  }
-
-  .hero__signal path {
-    stroke-dasharray: 1;
-    animation: signal-draw 1200ms var(--ease-in-out) 200ms both;
-  }
-
-  .hero__signal circle {
-    animation: signal-dot 300ms var(--ease-out) both;
-  }
-
-  .hero__signal circle:nth-of-type(1) {
-    animation-delay: 500ms;
-  }
-
-  .hero__signal circle:nth-of-type(2) {
-    animation-delay: 580ms;
-  }
-
-  .hero__signal circle:nth-of-type(3) {
-    animation-delay: 660ms;
-  }
-
-  .hero__signal circle:nth-of-type(4) {
-    animation-delay: 740ms;
-  }
-
-  .hero__signal circle:nth-of-type(5) {
-    animation-delay: 820ms;
-  }
-
-  @keyframes hero-rise {
-    from {
-      opacity: 0;
-      transform: translateY(0.75rem);
-    }
-  }
-
-  @keyframes signal-draw {
-    from {
-      stroke-dashoffset: 1;
-    }
-  }
-
-  @keyframes signal-dot {
-    from {
-      opacity: 0;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero .eyebrow,
-    .hero h1,
-    .hero__aside,
-    .hero__status {
-      animation-name: hero-fade;
-      animation-duration: 300ms;
-    }
-
-    .hero__signal path {
-      animation: none;
-    }
-
-    @keyframes hero-fade {
-      from {
-        opacity: 0;
-      }
-    }
-  }
-
-  @media (max-width: 42rem) {
-    .hero {
-      padding-block: var(--hero-pad-top) var(--hero-pad-bottom);
-    }
-
-    .hero__grid {
-      gap: var(--space-4);
-    }
-
-    .hero .eyebrow {
-      margin-bottom: var(--hero-eyebrow-gap);
-    }
-
-    .hero h1 {
+    .profile {
       max-width: none;
     }
 
-    .hero__aside .lede {
-      font-size: var(--hero-lede);
-    }
-
-    .hero__actions {
-      flex-wrap: nowrap;
-      gap: var(--space-2);
-      margin-top: var(--space-4);
-    }
-
-    .hero__actions .button {
-      padding-inline: 0.85rem;
-      white-space: nowrap;
-    }
-
-    .proof__grid {
-      grid-template-columns: 1fr;
-    }
-
-    .proof__grid div,
-    .proof__grid div:nth-child(2),
-    .proof__grid div:last-child {
-      min-height: 8rem;
-      border-right: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .capability-list article {
-      grid-template-columns: 1fr;
-      gap: var(--space-3);
-    }
-
-    .capability-list small {
-      grid-column: auto;
-    }
-  }
-
-  @media (max-width: 22rem) {
-    .hero__actions {
-      flex-wrap: wrap;
+    .profile :global(.profile__photo) {
+      width: 160px;
+      height: 160px;
     }
   }
 </style>

@@ -2,6 +2,9 @@ export const site = {
   name: "Kenji Hilasaca",
   role: "Data & AI Engineer",
   location: "Leeds, United Kingdom",
+  locationShort: "Leeds, UK",
+  rolesLine:
+    "Data & AI Engineer, NLP Researcher, Former Co-founder. Mechatronic engineer by training.",
   description:
     "Data & AI Engineer building reliable data pipelines, production-focused machine-learning systems and multilingual NLP tools.",
   url: "https://kenjihilasak.github.io",
@@ -65,7 +68,7 @@ export const projects: Project[] = [
     tags: ["Python", "Scikit-learn", "XGBoost", "Temporal validation"],
     github: "https://github.com/kenjihilasak/Pharmacy2U-Challenge",
     slug: "late-refill-risk",
-    featured: true,
+    featured: false,
   },
   {
     title: "Agentic Support Intelligence",
@@ -81,10 +84,98 @@ export const projects: Project[] = [
       "PostgreSQL",
       "Responsible AI",
     ],
-    github: "https://github.com/kenjihilasak/uol-finance-ai-assistant",
+    github: "https://github.com/kenjihilasak/agentic-support-intelligence",
     demo: "/work/agentic-support-intelligence/#live-workbench",
     slug: "agentic-support-intelligence",
     featured: true,
+  },
+];
+
+const alignAndShine = projects.find((p) => p.slug === "align-and-shine")!;
+const exchangeRate = projects.find(
+  (p) => p.slug === "exchange-rate-forecasting",
+)!;
+
+export type Publication = {
+  title: string;
+  /** Omitted for anonymous submissions under review. */
+  authors?: string;
+  venue: string;
+  year: number;
+  status: "published" | "under-review" | "thesis";
+  links: { label: string; href: string }[];
+  /** Hidden until title and authors are confirmed. */
+  draft?: boolean;
+};
+
+export const publications: Publication[] = [
+  {
+    title:
+      "Align and Shine: Building High-Quality Sentence-Aligned Corpora for Multilingual Text Simplification",
+    authors: "Kenji Hilasaca, Nouran Khallaf, Serge Sharoff",
+    venue: "BUCC Workshop at LREC 2026",
+    year: 2026,
+    status: "published",
+    links: [
+      { label: "Paper", href: alignAndShine.paper! },
+      { label: "arXiv", href: alignAndShine.preprint! },
+      { label: "Code", href: alignAndShine.github },
+    ],
+  },
+  {
+    title:
+      "Multi-robot Exploration and Mapping Strategy in Underground Mines by Behavior Control",
+    venue: "Springer",
+    year: 2015,
+    status: "published",
+    links: [
+      { label: "DOI", href: "https://doi.org/10.1007/978-3-319-09858-6_10" },
+    ],
+  },
+  {
+    title:
+      "Show, Don’t Just Attribute: Grounding Interpretability Scores in Human Edits",
+    venue: "Submitted to COLING 2027",
+    year: 2027,
+    status: "under-review",
+    links: [],
+    draft: true,
+  },
+  {
+    title:
+      "Don’t Scale, Reformulate: Output Structure Outweighs Parameter Count in Multilingual Easy-to-Read Strategy Prediction",
+    venue: "Submitted to TACL",
+    year: 2026,
+    status: "under-review",
+    links: [],
+    draft: true,
+  },
+  {
+    title:
+      "Exchange-rate forecasting: statistical, structural and machine-learning models",
+    authors: "Kenji Hilasaca",
+    venue: "MSc Data Science & Analytics dissertation, University of Leeds",
+    year: 2025,
+    status: "thesis",
+    links: [{ label: "PDF", href: exchangeRate.report! }],
+  },
+];
+
+export const education = [
+  {
+    period: "2024 — 2025 · United Kingdom",
+    degree: "MSc Data Science & Analytics · Distinction",
+    institution: "University of Leeds",
+  },
+  {
+    period: "2022 — 2023 · Remote",
+    degree: "MicroMasters programme · Statistics and Data Science",
+    institution: "MITx",
+  },
+  {
+    period: "2010 — 2016 · Peru",
+    degree: "BSc Mechatronic Engineering",
+    institution: "National University of Engineering",
   },
 ];
 
@@ -94,7 +185,7 @@ export const experience = [
     role: "Research Assistant · NLP & Data Science",
     organisation: "University of Leeds",
     summary:
-      "Build and optimise distributed NLP pipelines on enterprise Linux and NVIDIA GPU infrastructure, cutting a core multilingual workflow from 48 to 6 hours and releasing an open five-language data product.",
+      "Build and optimise distributed NLP pipelines on enterprise Linux and NVIDIA GPU infrastructure, and released an open five-language corpus as a reproducible data product.",
     tags: ["NLP", "GPU / HPC", "Data lineage", "Reproducibility"],
   },
   {
@@ -120,26 +211,5 @@ export const experience = [
     summary:
       "Co-founded a technology company delivering software, immersive products and hands-on technology education across Peru.",
     tags: ["Product delivery", "Software", "Embedded systems"],
-  },
-];
-
-export const capabilities = [
-  {
-    number: "01",
-    title: "Data systems",
-    text: "Designing traceable, maintainable pipelines across batch processing, distributed compute and cloud workflows.",
-    tools: "Python · SQL · PySpark · Hadoop · Airflow · AWS",
-  },
-  {
-    number: "02",
-    title: "Applied machine learning",
-    text: "Turning ambiguous problems into measurable experiments, careful validation and systems that support real decisions.",
-    tools: "Scikit-learn · XGBoost · TensorFlow · MLflow",
-  },
-  {
-    number: "03",
-    title: "NLP & generative AI",
-    text: "Building multilingual corpora, retrieval workflows and language systems with reproducibility and evaluation in mind.",
-    tools: "Transformers · RAG · LangGraph · Semantic search",
   },
 ];

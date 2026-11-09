@@ -9,7 +9,7 @@ const routes = [
   "/",
   "/work/",
   "/experience/",
-  "/about/",
+  "/publications/",
   "/work/align-and-shine/",
 ];
 const thresholds = {

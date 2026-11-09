@@ -4,130 +4,137 @@ import type { Project } from "../data/site";
 
 interface Props {
   project: Project;
-  index: number;
+  /** compact: home cards. full: /work/ list with problem, result and stack. */
+  variant?: "compact" | "full";
   headingLevel?: "h2" | "h3";
 }
 
-const { project, index, headingLevel = "h3" } = Astro.props;
+const { project, variant = "compact", headingLevel = "h3" } = Astro.props;
 const Heading = headingLevel;
+const full = variant === "full";
 ---
 
-<article class="project-card">
-  <div class="project-card__top">
-    <span class="project-card__number" aria-hidden="true">0{index + 1}</span>
-    <p class="eyebrow">{project.eyebrow}</p>
-  </div>
-  <div class="project-card__body">
-    <Heading>{project.title}</Heading>
-    <p>{project.description}</p>
-    <p class="project-card__outcome">{project.outcome}</p>
-  </div>
-  <ul class="tag-list" aria-label="Technologies">
-    {project.tags.map((tag) => <li>{tag}</li>)}
-  </ul>
+<article class:list={["project-card", { "project-card--full": full }]}>
+  <p class="project-card__tag">{project.eyebrow}</p>
+  <Heading class="project-card__title">{project.title}</Heading>
+  {
+    full ? (
+      <div class="project-card__body">
+        <p>{project.description}</p>
+        <p>
+          <strong>Result:</strong> {project.outcome}
+        </p>
+        <ul class="tag-list" aria-label="Stack">
+          {project.tags.map((tag) => (
+            <li>{tag}</li>
+          ))}
+        </ul>
+      </div>
+    ) : (
+      <p class="project-card__body">{project.outcome}</p>
+    )
+  }
   <div class="project-card__links">
     <a href={`/work/${project.slug}/`}>
-      Case study
-      <ArrowIcon />
+      Case study <ArrowIcon />
     </a>
+    {
+      full && project.demo && (
+        <a href={project.demo}>
+          Live demo <ArrowIcon />
+        </a>
+      )
+    }
+    {
+      full && project.paper && (
+        <a href={project.paper}>
+          Paper <ArrowIcon direction="up-right" />
+        </a>
+      )
+    }
+    {
+      full && project.report && (
+        <a href={project.report}>
+          Report <ArrowIcon direction="up-right" />
+        </a>
+      )
+    }
     <a href={project.github}>
-      GitHub
-      <ArrowIcon direction="up-right" />
+      GitHub <ArrowIcon direction="up-right" />
     </a>
   </div>
 </article>
 
 <style>
   .project-card {
-    display: grid;
-    grid-template-rows: auto 1fr auto auto;
-    min-height: 33rem;
-    padding: var(--space-5);
-    border: 1px solid var(--line);
-    background: var(--paper);
-    transition:
-      transform 200ms var(--ease-out),
-      box-shadow 200ms var(--ease-out);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .project-card:hover {
-      transform: translateY(-0.25rem);
-      box-shadow: 0 1.25rem 3rem rgb(17 21 19 / 8%);
-    }
-  }
-
-  .project-card__top,
-  .project-card__links {
     display: flex;
-    justify-content: space-between;
-    gap: var(--space-3);
-    align-items: baseline;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: var(--space-4);
+    border: 1px solid var(--line-solid);
+    border-radius: 8px;
+    background: var(--white);
   }
 
-  .project-card__number {
+  .project-card__tag {
+    margin: 0;
     color: var(--teal);
-    font-family: var(--font-sans);
-    font-size: var(--step--1);
+    font-size: 0.8125rem;
     font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
-  .project-card__top .eyebrow {
-    text-align: right;
+  .project-card__title {
+    font-size: 1.375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
   }
 
   .project-card__body {
-    padding-top: var(--space-6);
-  }
-
-  h2,
-  h3 {
-    margin-bottom: var(--space-4);
-    font-size: var(--step-4);
+    flex-grow: 1;
+    margin: 0;
+    color: #3d4441;
+    font-size: 0.9375rem;
+    line-height: 1.6;
   }
 
   .project-card__body p {
-    color: var(--muted);
+    margin-bottom: 0.75rem;
   }
 
-  .project-card__outcome {
-    padding-top: var(--space-4);
-    border-top: 1px solid var(--line);
-    color: var(--ink) !important;
-    font-weight: 500;
+  .project-card__body strong {
+    color: var(--ink);
   }
 
-  .tag-list {
-    margin-top: var(--space-5);
+  .project-card--full .project-card__title {
+    font-size: 1.5rem;
+  }
+
+  .project-card--full .tag-list {
+    margin-top: var(--space-3);
   }
 
   .project-card__links {
-    margin-top: var(--space-5);
-    padding-top: var(--space-4);
-    border-top: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
   }
 
   .project-card__links a {
     display: inline-flex;
+    min-height: 44px;
     gap: 0.35rem;
     align-items: center;
-    color: var(--ink);
-    font-size: var(--step--1);
-    font-weight: 600;
+    color: var(--teal);
     text-decoration: none;
   }
 
   .project-card__links a:hover {
-    color: var(--brick);
-  }
-
-  @media (max-width: 45rem) {
-    .project-card {
-      min-height: auto;
-    }
-
-    .project-card__links a {
-      min-height: 44px;
-    }
+    color: var(--teal-dark);
+    text-decoration: underline;
   }
 </style>

@@ -16,6 +16,7 @@
   --brick: #b6413a;
   --muted: #58605c;
   --line: rgb(17 21 19 / 18%);
+  --line-solid: #ddd6ca;
   --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
   --font-sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
   --step--1: clamp(0.82rem, 0.79rem + 0.14vw, 0.9rem);
@@ -37,7 +38,7 @@
   --space-9: 10rem;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-  --content: 78rem;
+  --content: 70rem;
   --gutter: clamp(1.25rem, 4vw, 4rem);
 }
 
@@ -76,13 +77,13 @@ svg {
 }
 
 a {
-  color: var(--teal-dark);
+  color: var(--teal);
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.2em;
 }
 
 a:hover {
-  color: var(--brick);
+  color: var(--teal-dark);
 }
 
 button,
@@ -373,6 +374,22 @@ ul {
 
 .prose strong {
   color: var(--ink);
+}
+
+.bio {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+.bio p {
+  margin-bottom: 1.375rem;
+}
+
+.page-title {
+  margin-bottom: var(--space-5);
+  font-size: clamp(2rem, 1.6rem + 1.6vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 .skip-link {

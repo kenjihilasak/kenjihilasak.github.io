@@ -1,0 +1,126 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ArrowIcon from "../components/ArrowIcon.astro";
+import { publications, type Publication } from "../data/site";
+
+const visible = publications.filter((p) => !p.draft);
+const groups: { status: Publication["status"]; label: string }[] = [
+  { status: "published", label: "Papers" },
+  { status: "under-review", label: "Under review" },
+  { status: "thesis", label: "Thesis" },
+];
+---
+
+<BaseLayout
+  title="Publications — Kenji Hilasaca"
+  description="Research papers and thesis by Kenji Hilasaca on multilingual NLP, text simplification and forecasting."
+>
+  <div class="container page">
+    <h1 class="page-title">Publications</h1>
+    {
+      groups.map(({ status, label }) => {
+        const items = visible.filter((p) => p.status === status);
+        return (
+          items.length > 0 && (
+            <section>
+              <h2 class="group">{label}</h2>
+              <ul class="list">
+                {items.map((p) => (
+                  <li class="pub">
+                    <p class="pub__year">{p.year}</p>
+                    <div>
+                      <h3 class="pub__title">{p.title}</h3>
+                      {p.authors && <p class="pub__authors">{p.authors}</p>}
+                      <p class="pub__venue">{p.venue}</p>
+                      {p.links.length > 0 && (
+                        <p class="pub__links">
+                          {p.links.map((link) => (
+                            <a href={link.href}>
+                              {link.label} <ArrowIcon direction="up-right" />
+                            </a>
+                          ))}
+                        </p>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        );
+      })
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    max-width: 52rem;
+    padding-block: var(--space-7) var(--space-6);
+  }
+
+  .group {
+    margin: var(--space-5) 0 var(--space-2);
+    color: var(--muted);
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .pub {
+    display: grid;
+    grid-template-columns: 4rem minmax(0, 1fr);
+    gap: var(--space-3);
+    padding-block: var(--space-4);
+    border-top: 1px solid var(--line-solid);
+  }
+
+  .pub__year {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .pub__title {
+    font-family: var(--font-sans);
+    font-size: 1.1875rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.4;
+  }
+
+  .pub__authors {
+    margin: 0.375rem 0 0;
+    color: #3d4441;
+  }
+
+  .pub__venue {
+    margin: 0.125rem 0 0;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .pub__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1rem;
+    margin: 0.25rem 0 0;
+    font-weight: 500;
+  }
+
+  .pub__links a {
+    display: inline-flex;
+    min-height: 44px;
+    gap: 0.35rem;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  @media (max-width: 40rem) {
+    .pub {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+  }
+</style>
